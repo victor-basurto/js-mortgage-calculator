@@ -1,0 +1,20 @@
+.form-section {
+	display: grid;
+    grid-template-columns: 600px;
+    grid-template-rows: repeat(6, 30px);
+    grid-gap: 1em;
+    width: 80%;
+    margin: auto;
+    height: 100vh;
+    justify-content: center;
+    align-content: center;
+}
+.form-section .group {
+	display: grid;
+	grid-template-columns: 150px 1fr;
+}
+#results {
+	color: red;
+	font-weight: 800;
+	font-size: 1.5rem;
+}

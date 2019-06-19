@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Mortgage Calculator</title>
+
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div class="form-section">
+		<div class="group">
+			<label>Loan Amount:</label>
+			<input type="number" id="amount">
+		</div>
+		<div class="group">
+			<label>Down Payment:</label>
+			<input type="number" id="downPayment">
+		</div>
+		<div class="group">
+			<label>APR (Interest):</label>
+			<input type="number" id="interestApr">
+		</div>
+		<div class="group">
+			<label>Period (How Long):</label>
+			<select name="dropdown" id="termInYears">
+				<option value="5">5 years</option>
+				<option value="7">7 years</option>
+				<option value="15">15 years</option>
+				<option value="30">30 years</option>
+			</select>
+		</div>
+
+		<button id="calculate">calculate</button>
+		<div class="results">
+			<p>total monthly payments: </p>
+			<p id="results"></p>
+		</div>
+	</div>
+
+	<script src="./script.js"></script>
+</body>
+</html>
