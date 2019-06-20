@@ -54,29 +54,66 @@ var MortgageCalculatorModule = (function () {
 
 })();
 	
-// Calculator Button
-var button = document.getElementById( 'calculate' );
-button.addEventListener('click', function () {
-	/**
-	 * DOM Variables
-	 */
-	var loanAmount =  document.getElementById('amount').value,
-		downPayment = document.getElementById('downPayment').value,
-		apr = document.getElementById('interestApr').value,
-		termInYears = document.getElementById('termInYears').value,
-		resultDiv = document.getElementById('results'),
-		result;
+// // Calculator Button
+// var button = document.getElementById( 'calculate' );
+// button.addEventListener('click', function () {
+// 	/**
+// 	 * DOM Variables
+// 	 */
+// 	var loanAmount =  document.getElementById('amount').value,
+// 		downPayment = document.getElementById('downPayment').value,
+// 		apr = document.getElementById('interestApr').value,
+// 		termInYears = document.getElementById('termInYears').value,
+// 		resultDiv = document.getElementById('results'),
+// 		result;
 
-	loanAmount = parseFloat( loanAmount );
-	downPayment = parseFloat( downPayment );
-	apr = parseFloat( apr );
-	termInYears = parseInt( termInYears );
+// 	loanAmount = parseFloat( loanAmount );
+// 	downPayment = parseFloat( downPayment );
+// 	apr = parseFloat( apr );
+// 	termInYears = parseInt( termInYears );
 
-	// substract downpayment if there is value on downpayment field
-	if ( downPayment ) {
-		loanAmount = loanAmount - downPayment;
+// 	// substract downpayment if there is value on downpayment field
+// 	if ( downPayment ) {
+// 		loanAmount = loanAmount - downPayment;
+// 	}
+
+// 	result = MortgageCalculatorModule.calculateMortgage( loanAmount, apr, termInYears );
+// 	resultDiv.innerHTML = result;
+// });
+
+var calculatorValues = {
+	loanAmount: document.getElementById('amount'),
+	downPayment: document.getElementById('downPayment'),
+	apr: document.getElementById('interestApr'),
+	termInYears: document.getElementById('termInYears'),
+	resultDiv: document.getElementById('results')
+}
+var loanAmountValue = calculatorValues.loanAmount.addEventListener('keyup', getValues);
+var downPaymentValue = calculatorValues.downPayment.addEventListener('keyup', getValues);
+var aprValue = calculatorValues.apr.addEventListener('keyup', getValues);
+var termInYearsValue = parseInt(calculatorValues.termInYears.value);
+
+// if ( downPayment ) {
+// 	loanAmountValue = loanAmountValue - downPayment;
+// }
+// var result = MortgageCalculatorModule.calculateMortgage( loanAmountValue, aprValue, termInYearsValue );
+// calculatorValues.resultDiv.innerHTML = result;
+
+
+
+function getValues(e) {
+	var loan, down, apr;
+	var currentElement = e.target.getAttribute('id');
+	if ( currentElement === 'amount' ) {
+		loan = (loan) ? e.target.value : 5000;
+	} else if ( currentElement === 'downPayment' ) {
+		down = (down) ? e.target.value : 1000;
+		loan = loan - down;
+	} else if ( currentElement === 'interestApr' ) {
+		apr = e.target.value || 4.5;
 	}
 
-	result = MortgageCalculatorModule.calculateMortgage( loanAmount, apr, termInYears );
-	resultDiv.innerHTML = result;
-});
+	var result = MortgageCalculatorModule.calculateMortgage(loan, apr, termInYearsValue);
+	calculatorValues.resultDiv.innerHTML = result;
+}
+
