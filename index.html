@@ -12,15 +12,15 @@
 	<div class="form-section">
 		<div class="group">
 			<label>Loan Amount:</label>
-			<input type="number" id="amount">
+			<input type="number" id="amount" name="loan" value="5000">
 		</div>
 		<div class="group">
 			<label>Down Payment:</label>
-			<input type="number" id="downPayment">
+			<input type="number" id="downPayment" name="dp" value="1000">
 		</div>
 		<div class="group">
 			<label>APR (Interest):</label>
-			<input type="number" id="interestApr">
+			<input type="number" id="interestApr" name="apr" value="4.5">
 		</div>
 		<div class="group">
 			<label>Period (How Long):</label>
@@ -32,7 +32,6 @@
 			</select>
 		</div>
 
-		<button id="calculate">calculate</button>
 		<div class="results">
 			<p>total monthly payments: </p>
 			<p id="results"></p>
