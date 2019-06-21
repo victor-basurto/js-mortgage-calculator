@@ -10,7 +10,6 @@ var MortgageCalculatorModule = (function () {
 	var _percentToDecimal = function( percent ) {
 		return ( percent / 12 ) / 100;
 	}
-
 	/**
 	 * Convert years into months
 	 * @param {Number} year - year form input field 
@@ -50,9 +49,13 @@ var MortgageCalculatorModule = (function () {
 		var result = _calculateMortgage(p, r, n);
 		resultEl.innerHTML = result;
 	}
+	var percentForm = function (amount, percent) {
+		return ( amount * percent ) / 100;
+	}
 
 	return {
-		initCalculator: initCalculator
+		initCalculator: initCalculator,
+		percentForm: percentForm
 	}
 })();
 	
@@ -61,13 +64,18 @@ var MortgageCalculatorModule = (function () {
  * 	Create element Percentage
  */
 var calculatorElements = {
-	loanAmount: document.getElementById('amount'),
-	downPayment: document.getElementById('downPayment'), // default 20%
-	apr: document.getElementById('interestApr'),
-	termInYears: document.getElementById('termInYears'),
-	resultDiv: document.getElementById('results'),
+	formSection: document.querySelector( '.form-section' ),	// reference to form
+	loanAmount: document.getElementById( 'amount' ),
+	downPayment: document.getElementById( 'downPayment' ), // default 20%
+	percentage: document.getElementById( 'percent' ),
+	apr: document.getElementById( 'interestApr' ),
+	termInYears: document.getElementById( 'termInYears' ),
+	resultDiv: document.getElementById( 'results' ),
 	getLoanAmountValue: function () {
 		return parseFloat( this.loanAmount.value ) || 5000;
+	},
+	getPercentValue: function () {
+		return parseFloat( this.percentage.value ) || 0;
 	},
 	getDownpaymentValue: function () {
 		return parseFloat( this.downPayment.value ) || 0;
@@ -84,6 +92,13 @@ var calculatorElements = {
 	},
 	getTermInYearsValue: function () {
 		return parseInt( 10, this.termInYears.value );
+	},
+
+	errors: {
+		/**
+		 * TODO:
+		 * 	Set errors
+		 */
 	}
 }
 
@@ -101,6 +116,7 @@ MortgageCalculatorModule.initCalculator(
  * Event Listeners for each input
  */
 calculatorElements.loanAmount.addEventListener('keyup', updateValues, false);
+calculatorElements.percentage.addEventListener('keyup', updateValues, false);
 calculatorElements.apr.addEventListener('keyup', updateValues, false);
 calculatorElements.downPayment.addEventListener('keyup', updateValues, false);
 calculatorElements.termInYears.addEventListener('change', updateValues, false);
@@ -114,13 +130,36 @@ calculatorElements.termInYears.addEventListener('change', updateValues, false);
 function updateValues(e) {
 	// temporary var
 	var currentElement = e.currentTarget,
-	 elementName = currentElement.getAttribute('name');
+		elementName = currentElement.getAttribute('name');
 
 	// initial values
 	var initLoan = calculatorElements.getLoanAmountValue(),
 		initDownPay = calculatorElements.getDownpaymentValue(),
 		initApr = calculatorElements.getAprValue(),
 		initTermInYears = calculatorElements.getTermInYearsValue();
+		
+	/* testings */
+	/**
+	 * TODO:
+	 * 	step 1: Get percentage / current amount
+	 * 	step 2: Get inputs needed
+	 * 	step 3: Check if `currentAmount` is NaN - if so, set it to 0
+	 * 	step 4: when user types, set new value on `downpayment` field with currentAmount typed
+	 * 	step 5: call/invoke `calculator()` with new values
+	 * 	step 6: 
+	 */
+	var percent = 0;
+	if ( elementName === 'percent' ) {
+		var currentAmmount = parseFloat( currentElement.value );
+		currentAmmount = (isNaN(currentAmmount)) ? 0 : currentAmmount;
+
+		var newloanAfterPercent = MortgageCalculatorModule.percentForm(initLoan, currentAmmount);
+
+		var dp = calculatorElements.downPayment;
+		dp.setAttribute('value', newloanAfterPercent);
+		console.log(this)
+	}
+	/* end testings */
 
 	if ( elementName === 'loan' ) {
 		var currentAmmount = parseFloat(currentElement.value);
