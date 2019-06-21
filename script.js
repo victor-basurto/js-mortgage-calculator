@@ -135,31 +135,10 @@ function updateValues(e) {
 	// initial values
 	var initLoan = calculatorElements.getLoanAmountValue(),
 		initDownPay = calculatorElements.getDownpaymentValue(),
+		initPercent = calculatorElements.getPercentValue(),
 		initApr = calculatorElements.getAprValue(),
 		initTermInYears = calculatorElements.getTermInYearsValue();
 		
-	/* testings */
-	/**
-	 * TODO:
-	 * 	step 1: Get percentage / current amount
-	 * 	step 2: Get inputs needed
-	 * 	step 3: Check if `currentAmount` is NaN - if so, set it to 0
-	 * 	step 4: when user types, set new value on `downpayment` field with currentAmount typed
-	 * 	step 5: call/invoke `calculator()` with new values
-	 * 	step 6: 
-	 */
-	var percent = 0;
-	if ( elementName === 'percent' ) {
-		var currentAmmount = parseFloat( currentElement.value );
-		currentAmmount = (isNaN(currentAmmount)) ? 0 : currentAmmount;
-
-		var newloanAfterPercent = MortgageCalculatorModule.percentForm(initLoan, currentAmmount);
-
-		var dp = calculatorElements.downPayment;
-		dp.setAttribute('value', newloanAfterPercent);
-		console.log(this)
-	}
-	/* end testings */
 
 	if ( elementName === 'loan' ) {
 		var currentAmmount = parseFloat(currentElement.value);
@@ -169,10 +148,35 @@ function updateValues(e) {
 		var currentDown = parseFloat( currentElement.value );
 		initDownPay = (!isNaN( currentDown )) ? currentDown : 0;
 		initLoan = initLoan - initDownPay;
+
+	} else if ( elementName === 'percent' ) {
+		/**
+		 * TODO:
+		 * 	step 1: Get percentage / current amount
+		 * 	step 2: Get inputs needed
+		 * 	step 3: Check if `currentAmount` is NaN - if so, set it to 0
+		 * 	step 4: when user types, set new value on `downpayment` field with currentAmount typed
+		 * 	step 5: call/invoke `calculator()` with new values
+		 * 	step 6: 
+		 */
+		var newDownPaymentAfterPercent, dpElement;
+		var currentAmmount = parseFloat( currentElement.value );
+		currentAmmount = (isNaN(currentAmmount)) ? 0 : currentAmmount;
+		newDownPaymentAfterPercent = MortgageCalculatorModule.percentForm(initLoan, currentAmmount);
+		dpElement = calculatorElements.downPayment;
+		console.log(dpElement)
+		dpElement.setAttribute('value', newDownPaymentAfterPercent);
+
+		initLoan = initLoan - newDownPaymentAfterPercent;
+
+
+		console.log(initLoan, initApr, initTermInYears)
+
 	} else if ( elementName === 'apr' ) {
 		var currentApr = parseFloat( currentElement.value );
 		initApr = (currentApr <= 1 || isNaN( currentApr )) ? 1 : currentApr;
 		initLoan = initLoan - initDownPay;
+		
 	} else if ( elementName === 'dropdown' ) {
 		initLoan = initLoan - initDownPay;
 		initApr = initApr || 1;
