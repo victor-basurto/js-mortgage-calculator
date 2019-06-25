@@ -66,7 +66,8 @@ var MortgageCalculatorModule = (function () {
 			elementName = currentElement.getAttribute('name');
 
 		// initial values
-		var initLoan = calculatorElements.getLoanAmountValue(),
+		var initHomeValue = calculatorElements.getHomeValue(),
+			initLoan = calculatorElements.getLoanAmountValue(),
 			initDownPay = calculatorElements.getDownpaymentValue(),
 			initPercent = calculatorElements.getPercentValue(),
 			initApr = calculatorElements.getAprValue(),
@@ -130,14 +131,20 @@ var MortgageCalculatorModule = (function () {
  */
 var calculatorElements = {
 	formSection: document.querySelector( '.form-section' ),	// reference to form
+	homeValue: document.getElementById('home-value'),
 	loanAmount: document.getElementById( 'amount' ),
 	downPayment: document.getElementById( 'downPayment' ), // default 20%
 	percentage: document.getElementById( 'percent' ),
 	apr: document.getElementById( 'interestApr' ),
 	termInYears: document.getElementById( 'termInYears' ),
 	resultDiv: document.getElementById( 'results' ),
+	getHomeValue: function() {
+		return parseInt(this.homeValue.value) || 0;
+	},
 	getLoanAmountValue: function () {
-		return parseFloat( this.loanAmount.value ) || 5000;
+		var result =  this.getHomeValue() - ((this.getHomeValue() * this.getPercentValue() ) / 100);
+		console.log(result);
+		return this.loanAmount.value = result;
 	},
 	getPercentValue: function () {
 		return parseFloat( this.percentage.value ) || 0;
