@@ -49,13 +49,24 @@ var MortgageCalculatorModule = (function () {
 		var result = _calculateMortgage(p, r, n);
 		resultEl.innerHTML = result;
 	}
-	var percentForm = function (amount, percent) {
+	var percentToAmount = function (amount, percent) {
 		return ( amount * percent ) / 100;
+	}
+
+	var amountToPercent = function (amount, dp) {
+		return (dp / amount) * 100;
+	}
+
+	var setNewValue = function (amount, el) {
+		console.log(amount)
+		el.setAttribute('value', amount);
 	}
 
 	return {
 		initCalculator: initCalculator,
-		percentForm: percentForm
+		percentToAmount: percentToAmount,
+		amountToPercent: amountToPercent,
+		setNewValue: setNewValue
 	}
 })();
 	
@@ -145,9 +156,17 @@ function updateValues(e) {
 		initLoan = ((currentAmmount <= 5000 || isNaN( currentAmmount )) ? 5000 : currentAmmount) - initDownPay;
 
 	} else if ( elementName === 'dp' ) {
+		var dpToPercent, newPercentAmount;
 		var currentDown = parseFloat( currentElement.value );
 		initDownPay = (!isNaN( currentDown )) ? currentDown : 0;
-		initLoan = initLoan - initDownPay;
+		console.log('init downpayment: ' + initDownPay)
+		dpToPercent = MortgageCalculatorModule.amountToPercent( initLoan, initDownPay );
+		console.log('newPercentAmount: ' + dpToPercent);
+		newPercentAmount = (!dpToPercent || dpToPercent === 'undefined') ? initPercent : dpToPercent;
+		console.log('newPercentAmount: ' + newPercentAmount);
+		MortgageCalculatorModule.setNewValue(newPercentAmount, calculatorElements.percentage);
+
+		initLoan = initLoan - newPercentAmount;
 
 	} else if ( elementName === 'percent' ) {
 		/**
@@ -159,13 +178,12 @@ function updateValues(e) {
 		 * 	step 5: call/invoke `calculator()` with new values
 		 * 	step 6: 
 		 */
-		var newDownPaymentAfterPercent, dpElement;
+		var newDownPaymentAfterPercent, percentToDp;
 		var currentAmmount = parseFloat( currentElement.value );
 		currentAmmount = (isNaN(currentAmmount)) ? 0 : currentAmmount;
-		newDownPaymentAfterPercent = MortgageCalculatorModule.percentForm(initLoan, currentAmmount);
-		dpElement = calculatorElements.downPayment;
-		console.log(dpElement)
-		dpElement.setAttribute('value', newDownPaymentAfterPercent);
+		percentToDp = MortgageCalculatorModule.percentToAmount(initLoan, currentAmmount);
+		newDownPaymentAfterPercent = (!percentToDp || percentToDp === 'undefined') ? initDownPay : percentToDp;
+		MortgageCalculatorModule.setNewValue(newDownPaymentAfterPercent, calculatorElements.downPayment);
 
 		initLoan = initLoan - newDownPaymentAfterPercent;
 
@@ -176,7 +194,6 @@ function updateValues(e) {
 		var currentApr = parseFloat( currentElement.value );
 		initApr = (currentApr <= 1 || isNaN( currentApr )) ? 1 : currentApr;
 		initLoan = initLoan - initDownPay;
-		
 	} else if ( elementName === 'dropdown' ) {
 		initLoan = initLoan - initDownPay;
 		initApr = initApr || 1;
