@@ -42,8 +42,15 @@ var MortgageCalculatorModule = (function () {
 		// return number of payments
 		return monthlyPayments;
 	}
-	var roundToNearestHalf = function (amount, precision) {
-		return Math.round( amount / precision ) * precision;
+
+	/**
+	 * 
+	 * @param {Float} percentage - current percentage 
+	 * @param {Float} precision - desired nearest 
+	 */
+	var _roundToNearestHalf = function (percentage, precision) {
+		var result = Math.round( percentage / precision ) * precision;
+		return result;
 	}
 	var _percentToAmount = function (amount, percent) {
 		var result = ( amount * percent ) / 100;
@@ -51,8 +58,14 @@ var MortgageCalculatorModule = (function () {
 	}
 
 	var _amountToPercent = function (amount, dp) {
-		var result = (dp / amount) * 100;
-		return parseFloat( result ).toFixed( 2 );
+		var result =  parseFloat( (dp / amount) * 100 ).toFixed( 2 );
+		
+
+		if ( result >= 1.00 ) {
+			return result = Math.round( result / 0.5 ) * 0.5;
+		}
+
+		return result;
 	}
 
 	var _setNewValue = function (opts) {
@@ -76,6 +89,9 @@ var MortgageCalculatorModule = (function () {
 	 * @param {HTMLElement} e - Current Element 
 	 */
 	var updateValues = function (e) {
+		/**
+		 * TODO: Remove alerts and set errors
+		 */
 		// temporary var
 		var currentElement = e.currentTarget,
 			elementName = currentElement.getAttribute('name'),
@@ -91,8 +107,15 @@ var MortgageCalculatorModule = (function () {
 			currentLoanAmount;
 
 		if ( elementName === 'homevalue' ) {
-			var currentHomeValue, percentageValue;
+			/**
+			 * If homevalue is modified
+			 * 	then Loan amount
+			 * 	then downpayment
+			 * 	then percent
+			 * 	then results
+			 */
 
+			var currentHomeValue, percentageValue;
 
 			currentHomeValue = parseFloat( currentElement.value ).toFixed(2);
 			percentageValue = parseFloat( calculatorElements.getPercentValue() ).toFixed(2);
@@ -106,24 +129,34 @@ var MortgageCalculatorModule = (function () {
 			currentLoanAmount = parseInt(calculatorElements.loanAmount.value);
 			currentLoanAmount = (!currentLoanAmount || currentLoanAmount === 'undefined' || isNaN(currentLoanAmount)) ? alert('no amoung for loan') : currentLoanAmount;
 
-			console.log(`p: ${initHomeValue} \nr: ${initApr} \nn: ${initTermInYears}`);
+			
 
 		} else if ( elementName === 'loan' ) {
+			/**
+			 * TODO: enable Loan Amount Input Field
+			 * 	Loan amount is disabled for no
+			 */
 			var currentAmmount = parseFloat(currentElement.value).toFixed(2);
 			initHomeValue = ((currentAmmount <= 5000 || isNaN( currentAmmount )) ? 5000 : currentAmmount) - initDownPay;
 			console.log(initLoan)
-			console.log(`p: ${initHomeValue} \nr: ${initApr} \nn: ${initTermInYears}`);
+			
 
 		} else if ( elementName === 'dp' || elementName === 'percent' || elementName === 'homevalue' ) {
 			switch(elementName) {
 				case 'dp':
+					/**
+					 * TODO: if Downpayment is modified
+					 * 	then percentage
+					 * 	then loan amount
+					 * 	then results
+					 */
 					var dpToPercent, currentDown; 
 					currentDown = parseFloat( currentElement.value ).toFixed(2);
 					initDownPay = (!isNaN( currentDown )) ? currentDown : 0;
 					dpToPercent = _amountToPercent( initLoan, initDownPay );
 					currentHomeValue = calculatorElements.getHomeValue();
 
-					amounts.newAmount = (!dpToPercent || dpToPercent === 'undefined') ? initPercent : dpToPercent;
+					amounts.newAmount = (!dpToPercent || dpToPercent === 'undefined') ? 0 : dpToPercent;
 					amounts.newAmountElement = calculatorElements.percentage;
 
 					amounts.newLoan = currentHomeValue - initDownPay;
@@ -135,6 +168,12 @@ var MortgageCalculatorModule = (function () {
 					console.log(initLoan)
 					break;
 				case 'percent':
+					/**
+					 * TODO: if Percentage is modified
+					 * 	then downpayment
+					 * 	then loan amount
+					 * 	then results
+					 */
 					var percentToDp, currentAmmount;
 					currentAmmount = parseFloat( currentElement.value ).toFixed(2);
 					currentAmmount = (isNaN(currentAmmount)) ? 0 : currentAmmount;
@@ -156,13 +195,21 @@ var MortgageCalculatorModule = (function () {
 			console.log(initLoan)
 
 		} else if ( elementName === 'apr' ) {
+			/**
+			 * TODO: if APR is modified
+			 * 	then results
+			 */
 			var currentApr = parseFloat( currentElement.value ).toFixed(2);
 			initApr = (currentApr <= 1 || isNaN( currentApr )) ? 1 : currentApr;
 			currentLoanAmount = parseInt(calculatorElements.loanAmount.value);
 			currentLoanAmount = (!currentLoanAmount || currentLoanAmount === 'undefined' || isNaN(currentLoanAmount)) ? alert('no amoung for loan') : currentLoanAmount;
 			console.log(initLoan)
-			console.log(`p: ${initHomeValue} \nr: ${initApr} \nn: ${initTermInYears}`);
+			
 		} else if ( elementName === 'dropdown' ) {
+			/**
+			 * TODO: if Dropdown is modified
+			 * 	then results
+			 */
 			currentLoanAmount = parseInt(calculatorElements.loanAmount.value);
 			currentLoanAmount = (!currentLoanAmount || currentLoanAmount === 'undefined' || isNaN(currentLoanAmount)) ? alert('no amoung for loan') : currentLoanAmount;
 			console.log(initLoan)
@@ -255,7 +302,11 @@ MortgageCalculatorModule.initCalculator(
 );
 
 /**
+ * TODO:
+ * 	change `keyup` listener to `keypress` or something to track only numbers
+ * 
  * Event Listeners for each input
+ * 
  */
 calculatorElements.homeValue.addEventListener('keyup', MortgageCalculatorModule.updateValues, false);
 calculatorElements.loanAmount.addEventListener('keyup', MortgageCalculatorModule.updateValues, false);
