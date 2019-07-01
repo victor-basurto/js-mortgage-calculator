@@ -12,15 +12,15 @@
 	<div class="form-section">
 		<div class="group">
 			<label>Home Value:</label>
-			<input type="text" id="home-value" value="500000">
+			<input type="text" id="home-value" name="homevalue" value="500000">
 		</div>
 		<div class="group">
 			<label>Loan Amount:</label>
-			<input type="number" id="amount" name="loan" value="0">
+			<input disabled type="number" id="amount" name="loan" value="0">
 		</div>
 		<div class="group">
 			<label>Down Payment:</label>
-			<input type="number" id="downPayment" name="dp" value="1000">
+			<input type="number" id="downPayment" name="dp" value="0">
 		</div>
 		<div class="group">
 			<label>Percent:</label>
@@ -36,7 +36,7 @@
 				<option value="5">5 years</option>
 				<option value="7">7 years</option>
 				<option value="15">15 years</option>
-				<option value="30">30 years</option>
+				<option selected value="30">30 years</option>
 			</select>
 		</div>
 

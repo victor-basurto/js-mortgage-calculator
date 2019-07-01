@@ -18,3 +18,7 @@
 	font-weight: 800;
 	font-size: 1.5rem;
 }
+#amount {
+	background: #e5e5e5;
+	color: red;
+}
