@@ -44,7 +44,7 @@ var MortgageCalculatorModule = (function () {
 	}
 
 	/**
-	 * 
+	 * Round to nearest half.... Currently not in use
 	 * @param {Float} percentage - current percentage 
 	 * @param {Float} precision - desired nearest 
 	 */
@@ -52,28 +52,45 @@ var MortgageCalculatorModule = (function () {
 		var result = Math.round( percentage / precision ) * precision;
 		return result;
 	}
+
+	/**
+	 * Get new amount from percentage and current home value
+	 * @param {Integer} amount - Current Home Value
+	 * @param {Float} percent - Current Percentage
+	 * @return {Integer} result - new integer value
+	 */
 	var _percentToAmount = function (amount, percent) {
 		var result = ( amount * percent ) / 100;
 		return parseInt( result );
 	}
 
+	/**
+	 * Convert amount and downpayment into Percentage
+	 * @param {Integer} amount - Current Home Value
+	 * @param {Integer} dp - Current Downpayment
+	 * @return {Float} result - new percentage
+	 */
 	var _amountToPercent = function (amount, dp) {
+		// get only 2 decimals
 		var result =  parseFloat( (dp / amount) * 100 ).toFixed( 2 );
 		
-
+		// if value is greater than 1.00
+		// then round it to the nearest 50c
 		if ( result >= 1.00 ) {
 			return result = Math.round( result / 0.5 ) * 0.5;
 		}
-
 		return result;
 	}
 
+	/**
+	 * function receives an object and mofied an element after evalute the results
+	 * @param {Object} opts - values for newloan, newamount, and element to be modified
+	 */
 	var _setNewValue = function (opts) {
-		
-		if ( typeof opts !== 'object' ) {
-			return;
-		}
+		// return if no object is received
+		if ( typeof opts !== 'object' ) return;
 
+		// if newloan and newamount exists
 		if ( opts.newLoan ) {
 			opts.loanamountElement.value = opts.newLoan;
 			opts.newAmountElement.value = opts.newAmount;
