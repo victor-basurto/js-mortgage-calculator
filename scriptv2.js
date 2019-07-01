@@ -104,6 +104,7 @@ var MortgageCalculatorModule = (function () {
 			initPercent = calculatorElements.getPercentValue(),
 			initApr = calculatorElements.getAprValue(),
 			initTermInYears = calculatorElements.getTermInYearsValue(),
+			currentHomeValue,
 			currentLoanAmount;
 
 		if ( elementName === 'homevalue' ) {
@@ -111,11 +112,10 @@ var MortgageCalculatorModule = (function () {
 			 * If homevalue is modified
 			 * 	then Loan amount
 			 * 	then downpayment
-			 * 	then percent
 			 * 	then results
 			 */
 
-			var currentHomeValue, percentageValue;
+			var  percentageValue;
 
 			currentHomeValue = parseFloat( currentElement.value ).toFixed(2);
 			percentageValue = parseFloat( calculatorElements.getPercentValue() ).toFixed(2);
@@ -153,19 +153,20 @@ var MortgageCalculatorModule = (function () {
 					var dpToPercent, currentDown; 
 					currentDown = parseFloat( currentElement.value ).toFixed(2);
 					initDownPay = (!isNaN( currentDown )) ? currentDown : 0;
-					dpToPercent = _amountToPercent( initLoan, initDownPay );
 					currentHomeValue = calculatorElements.getHomeValue();
+					
+					amounts.newLoan = currentHomeValue - initDownPay;
+					amounts.loanamountElement = calculatorElements.loanAmount;
+
+					dpToPercent = _amountToPercent( currentHomeValue, initDownPay );
 
 					amounts.newAmount = (!dpToPercent || dpToPercent === 'undefined') ? 0 : dpToPercent;
 					amounts.newAmountElement = calculatorElements.percentage;
 
-					amounts.newLoan = currentHomeValue - initDownPay;
-					amounts.loanamountElement = calculatorElements.loanAmount;
 
 					currentLoanAmount = parseInt(calculatorElements.loanAmount.value);
 					currentLoanAmount = (!currentLoanAmount || currentLoanAmount === 'undefined' || isNaN(currentLoanAmount)) ? alert('no amoung for loan') : currentLoanAmount;
 
-					console.log(initLoan)
 					break;
 				case 'percent':
 					/**
@@ -177,11 +178,12 @@ var MortgageCalculatorModule = (function () {
 					var percentToDp, currentAmmount;
 					currentAmmount = parseFloat( currentElement.value ).toFixed(2);
 					currentAmmount = (isNaN(currentAmmount)) ? 0 : currentAmmount;
-					percentToDp = _percentToAmount(calculatorElements.getHomeValue(), currentAmmount);
+					currentHomeValue = calculatorElements.getHomeValue();
+					percentToDp = _percentToAmount(currentHomeValue, currentAmmount);
 					amounts.newAmount = (!percentToDp || percentToDp === 'undefined') ? initDownPay : percentToDp;
 					amounts.newAmountElement = calculatorElements.downPayment;
 
-					amounts.newLoan = currentHomeValue - initDownPay;
+					amounts.newLoan = currentHomeValue - percentToDp;
 					amounts.loanamountElement = calculatorElements.loanAmount;
 
 					currentLoanAmount = parseInt(calculatorElements.loanAmount.value);
