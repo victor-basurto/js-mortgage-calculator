@@ -22,3 +22,9 @@
 	background: #e5e5e5;
 	color: red;
 }
+.error {
+	grid-column: 2/3;
+	display: none;
+	font-style: italic;
+	color: red;
+}
