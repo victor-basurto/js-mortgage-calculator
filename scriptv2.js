@@ -91,7 +91,7 @@ var MortgageCalculatorModule = (function () {
 		if ( typeof opts !== 'object' ) return;
 
 		// if newloan and newamount exists
-		if ( opts.newLoan ) {
+		if ( opts.newLoan >= 0 ) {
 			opts.loanamountElement.value = opts.newLoan;
 			opts.newAmountElement.value = opts.newAmount;
 		} else {
@@ -125,33 +125,20 @@ var MortgageCalculatorModule = (function () {
 			currentLoanAmount;
 
 		if ( elementName === 'homevalue' ) {
-			/**
-			 * If homevalue is modified
-			 * 	then Loan amount
-			 * 	then downpayment
-			 * 	then results
-			 */
-
 			var  percentageValue;
-
-			currentHomeValue = parseFloat( currentElement.value ).toFixed(2);
+			currentHomeValue = (_isEmpty(currentElement.value)) ? _emptyFieldMsg(currentElement) : (currentElement.nextElementSibling.style.display = 'none', currentElement.parentNode.classList.remove( 'has-error' ), parseFloat( currentElement.value ).toFixed(2));
 			percentageValue = parseFloat( calculatorElements.getPercentValue() ).toFixed(2);
 			amounts.newLoan = currentHomeValue - ((currentHomeValue * percentageValue) / 100);
 			amounts.loanamountElement = calculatorElements.loanAmount;
 			amounts.newAmount = (currentHomeValue * percentageValue) / 100;
 			amounts.newAmountElement = calculatorElements.downPayment;
 
-
 			_setNewValue( amounts );
 			currentLoanAmount = parseInt(calculatorElements.loanAmount.value);
-			currentLoanAmount = (!currentLoanAmount || currentLoanAmount === 'undefined' || isNaN(currentLoanAmount)) ? alert('no amoung for loan') : currentLoanAmount;
-
-			
-
 		} else if ( elementName === 'loan' ) {
 			/**
 			 * TODO: enable Loan Amount Input Field
-			 * 	Loan amount is disabled for no
+			 * 	Loan amount is disabled for now
 			 */
 			var currentAmmount = parseFloat(currentElement.value).toFixed(2);
 			initHomeValue = ((currentAmmount <= 5000 || isNaN( currentAmmount )) ? 5000 : currentAmmount) - initDownPay;
@@ -161,16 +148,11 @@ var MortgageCalculatorModule = (function () {
 		} else if ( elementName === 'dp' || elementName === 'percent' || elementName === 'homevalue' ) {
 			switch(elementName) {
 				case 'dp':
-					/**
-					 * TODO: if Downpayment is modified
-					 * 	then percentage
-					 * 	then loan amount
-					 * 	then results
-					 */
 					var dpToPercent, currentDown; 
-					currentDown = parseFloat( currentElement.value ).toFixed(2);
-					initDownPay = (!isNaN( currentDown )) ? currentDown : 0;
 					currentHomeValue = calculatorElements.getHomeValue();
+					currentDown = (_isEmpty(currentElement.value) ? _emptyFieldMsg(currentElement) : _checkDownPaymentAmount(currentElement.value, currentHomeValue, currentElement));
+					
+					initDownPay = (!isNaN( currentDown )) ? currentDown : 0;
 					
 					amounts.newLoan = currentHomeValue - initDownPay;
 					amounts.loanamountElement = calculatorElements.loanAmount;
@@ -182,7 +164,7 @@ var MortgageCalculatorModule = (function () {
 
 
 					currentLoanAmount = parseInt(calculatorElements.loanAmount.value);
-					currentLoanAmount = (!currentLoanAmount || currentLoanAmount === 'undefined' || isNaN(currentLoanAmount)) ? alert('no amoung for loan') : currentLoanAmount;
+					
 
 					break;
 				case 'percent':
@@ -191,9 +173,10 @@ var MortgageCalculatorModule = (function () {
 					 * 	then downpayment
 					 * 	then loan amount
 					 * 	then results
+					 * 	then errors
 					 */
 					var percentToDp, currentAmmount;
-					currentAmmount = parseFloat( currentElement.value ).toFixed(2);
+					currentAmmount = (_isEmpty(currentElement.value)) ? _emptyFieldMsg(currentElement) : _checkPercentageAmount(currentElement.value, currentElement);
 					currentAmmount = (isNaN(currentAmmount)) ? 0 : currentAmmount;
 					currentHomeValue = calculatorElements.getHomeValue();
 					percentToDp = _percentToAmount(currentHomeValue, currentAmmount);
@@ -204,25 +187,24 @@ var MortgageCalculatorModule = (function () {
 					amounts.loanamountElement = calculatorElements.loanAmount;
 
 					currentLoanAmount = parseInt(calculatorElements.loanAmount.value);
-					currentLoanAmount = (!currentLoanAmount || currentLoanAmount === 'undefined' || isNaN(currentLoanAmount)) ? alert('no amoung for loan') : currentLoanAmount;
+					
 
 					break;
 			}
 			_setNewValue( amounts );
 			currentLoanAmount = parseInt(calculatorElements.loanAmount.value);
-			currentLoanAmount = (!currentLoanAmount || currentLoanAmount === 'undefined' || isNaN(currentLoanAmount)) ? alert('no amoung for loan') : currentLoanAmount;
-			console.log(initLoan)
+			
 
 		} else if ( elementName === 'apr' ) {
 			/**
 			 * TODO: if APR is modified
 			 * 	then results
 			 */
-			var currentApr = parseFloat( currentElement.value ).toFixed(2);
+			var currentApr = (_isEmpty( currentElement.value )) ? _emptyFieldMsg( currentElement ) : _checkAPRAmount( currentElement.value, currentElement );
 			initApr = (currentApr <= 1 || isNaN( currentApr )) ? 1 : currentApr;
 			currentLoanAmount = parseInt(calculatorElements.loanAmount.value);
-			currentLoanAmount = (!currentLoanAmount || currentLoanAmount === 'undefined' || isNaN(currentLoanAmount)) ? alert('no amoung for loan') : currentLoanAmount;
-			console.log(initLoan)
+			
+			// console.log(initLoan)
 			
 		} else if ( elementName === 'dropdown' ) {
 			/**
@@ -242,11 +224,87 @@ var MortgageCalculatorModule = (function () {
 		// update results every keyup
 		MortgageCalculatorModule.initCalculator( currentLoanAmount, initApr, initTermInYears, calculatorElements.resultDiv );
 	}
+
+	/**
+	 * Initialize calculator with default values
+	 * @param {Integer} p - Current Loan Amount
+	 * @param {Float} r - Current APR
+	 * @param {Integer} n - Current Term In Years
+	 * @param {HTMLElement} resultEl - element to be modified
+	 */
 	var initCalculator = function (p, r, n, resultEl) {
 		var result = _calculateMortgage(p, r, n);
 		resultEl.innerHTML = result;
 	}
-	
+
+	/*----------------------------------------
+		Errors Checker
+	 ------------------------------------------*/
+	var _isEmpty = function (elVal) {
+		var isEmpty = (!elVal || elVal.length < 1) ? true : false;
+		return isEmpty;
+	}
+	var _emptyFieldMsg = function (el) {
+		var errorEl = el.nextElementSibling;
+		var errorGroup = el.parentNode;
+		errorEl.style.display = 'block';
+		errorEl.innerHTML = calculatorElements.errors.emptyField;
+		errorGroup.classList.add( 'has-error' );
+	}
+	/**
+	 * 
+	 * @param {*} downpayment 
+	 * @param {*} homevalue 
+	 * @param {*} el 
+	 */
+	var _checkDownPaymentAmount = function (downpayment, homevalue, el) {
+		var errorEl = el.nextElementSibling;
+		var currentValue = parseInt( downpayment );
+		var errorGroup = el.parentNode;
+
+		if ( currentValue > homevalue ) {
+			errorGroup.classList.add( 'has-error' );
+			errorEl.style.display = 'block';
+			errorEl.innerHTML = calculatorElements.errors.downPaymentErrors.greaterThanHomeValueMsg;
+		} else {
+			errorEl.style.display = 'none';
+			errorGroup.classList.remove( 'has-error' );
+			return currentValue;
+		}
+	}
+
+	var _checkPercentageAmount = function (percentage, el) {
+		var errorEl = el.nextElementSibling;
+		var currentValue = parseFloat( percentage ).toFixed( 2 );
+		var errorGroup = el.parentNode;
+
+		if ( percentage > 100 ) {
+			errorGroup.classList.add( 'has-error' );
+			errorEl.style.display = 'block';
+			errorEl.innerHTML = calculatorElements.errors.percentErrors.greaterThanOneHundred;
+		} else {
+			errorEl.style.display = 'none';
+			errorGroup.classList.remove( 'has-error' );
+			return currentValue;
+		}
+	}
+
+	var _checkAPRAmount = function (apr, el) {
+		var errorEl = el.nextElementSibling;
+		var currentValue = parseFloat( apr ).toFixed( 2 );
+		var errorGroup = el.parentNode;
+
+		if ( apr > 50 ) {
+			errorGroup.classList.add( 'has-error' );
+			errorEl.style.display = 'block';
+			errorEl.innerHTML = calculatorElements.errors.aprErrors.greaterThanFifty;
+		} else {
+			errorEl.style.display = 'none';
+			errorGroup.classList.remove( 'has-error' );
+			return currentValue;
+		}
+	}
+
 
 	return {
 		initCalculator: initCalculator,
@@ -307,6 +365,19 @@ var calculatorElements = {
 		 * TODO:
 		 * 	Set errors
 		 */
+		homevalueErrors: {
+			greaterThanFiveThousandMsg: 'Value should be greater than 5,000'
+		},
+		downPaymentErrors: {
+			greaterThanHomeValueMsg: 'Downpayment is bigger than Homevalue'
+		},
+		percentErrors: {
+			greaterThanOneHundred: 'Value should not exceed 100%'
+		},
+		aprErrors: {
+			greaterThanFifty: 'Value should\'nt exceed 50% of APR'
+		},
+		emptyField: 'field should\'nt be empty'
 	}
 }
 
