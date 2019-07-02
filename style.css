@@ -1,3 +1,9 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+body { font-size: 16px; }
 .form-section {
 	display: grid;
     grid-template-columns: 600px;
@@ -17,7 +23,8 @@
 #results {
 	color: red;
 	font-weight: 800;
-	font-size: 1.5rem;
+	font-size: 3.5rem;
+	margin: 0;
 }
 #amount {
 	background: #e5e5e5;
