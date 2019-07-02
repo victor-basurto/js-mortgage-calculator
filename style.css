@@ -2,16 +2,17 @@
 	display: grid;
     grid-template-columns: 600px;
     grid-template-rows: repeat(6, 30px);
-    grid-gap: 1em;
+    grid-gap: 2rem;
     width: 80%;
     margin: auto;
     height: 100vh;
     justify-content: center;
-    align-content: center;
+	align-content: center;
 }
 .form-section .group {
 	display: grid;
 	grid-template-columns: 150px 1fr;
+	grid-template-rows: 30px 30px;
 }
 #results {
 	color: red;
@@ -22,6 +23,9 @@
 	background: #e5e5e5;
 	color: red;
 }
+
+.has-error input,
+.has-error input:focus { border: 1px solid red; outline: 0; }
 .error {
 	grid-column: 2/3;
 	display: none;

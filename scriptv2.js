@@ -126,7 +126,7 @@ var MortgageCalculatorModule = (function () {
 
 		if ( elementName === 'homevalue' ) {
 			var  percentageValue;
-			currentHomeValue = (_isEmpty(currentElement.value)) ? _emptyFieldMsg(currentElement) : (currentElement.nextElementSibling.style.display = 'none', parseFloat( currentElement.value ).toFixed(2));
+			currentHomeValue = (_isEmpty(currentElement.value)) ? _emptyFieldMsg(currentElement) : (currentElement.nextElementSibling.style.display = 'none', currentElement.parentNode.classList.remove( 'has-error' ), parseFloat( currentElement.value ).toFixed(2));
 			percentageValue = parseFloat( calculatorElements.getPercentValue() ).toFixed(2);
 			amounts.newLoan = currentHomeValue - ((currentHomeValue * percentageValue) / 100);
 			amounts.loanamountElement = calculatorElements.loanAmount;
@@ -246,8 +246,10 @@ var MortgageCalculatorModule = (function () {
 	}
 	var _emptyFieldMsg = function (el) {
 		var errorEl = el.nextElementSibling;
+		var errorGroup = el.parentNode;
 		errorEl.style.display = 'block';
 		errorEl.innerHTML = calculatorElements.errors.emptyField;
+		errorGroup.classList.add( 'has-error' );
 	}
 	/**
 	 * 
@@ -258,12 +260,15 @@ var MortgageCalculatorModule = (function () {
 	var _checkDownPaymentAmount = function (downpayment, homevalue, el) {
 		var errorEl = el.nextElementSibling;
 		var currentValue = parseInt( downpayment );
+		var errorGroup = el.parentNode;
 
 		if ( currentValue > homevalue ) {
+			errorGroup.classList.add( 'has-error' );
 			errorEl.style.display = 'block';
 			errorEl.innerHTML = calculatorElements.errors.downPaymentErrors.greaterThanHomeValueMsg;
 		} else {
 			errorEl.style.display = 'none';
+			errorGroup.classList.remove( 'has-error' );
 			return currentValue;
 		}
 	}
@@ -271,12 +276,15 @@ var MortgageCalculatorModule = (function () {
 	var _checkPercentageAmount = function (percentage, el) {
 		var errorEl = el.nextElementSibling;
 		var currentValue = parseFloat( percentage ).toFixed( 2 );
+		var errorGroup = el.parentNode;
 
 		if ( percentage > 100 ) {
+			errorGroup.classList.add( 'has-error' );
 			errorEl.style.display = 'block';
 			errorEl.innerHTML = calculatorElements.errors.percentErrors.greaterThanOneHundred;
 		} else {
 			errorEl.style.display = 'none';
+			errorGroup.classList.remove( 'has-error' );
 			return currentValue;
 		}
 	}
@@ -284,12 +292,15 @@ var MortgageCalculatorModule = (function () {
 	var _checkAPRAmount = function (apr, el) {
 		var errorEl = el.nextElementSibling;
 		var currentValue = parseFloat( apr ).toFixed( 2 );
+		var errorGroup = el.parentNode;
 
 		if ( apr > 50 ) {
+			errorGroup.classList.add( 'has-error' );
 			errorEl.style.display = 'block';
 			errorEl.innerHTML = calculatorElements.errors.aprErrors.greaterThanFifty;
 		} else {
 			errorEl.style.display = 'none';
+			errorGroup.classList.remove( 'has-error' );
 			return currentValue;
 		}
 	}
