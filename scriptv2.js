@@ -87,9 +87,8 @@ var MortgageCalculatorModule = (function () {
 	 * @param {Object} opts - values for newloan, newamount, and element to be modified
 	 */
 	var _setNewValue = function (opts) {
-		console.log(opts)
-		var newAmount = opts.newAmount.toLocaleString();
-		var newLoan = opts.newLoan.toLocaleString();
+		var newAmount = opts.newAmount.toLocaleString(),
+			newLoan = opts.newLoan.toLocaleString();
 		// return if no object is received
 		if ( typeof opts !== 'object' ) return;
 
@@ -111,6 +110,7 @@ var MortgageCalculatorModule = (function () {
 	var updateValues = function (e) {
 
 		if ( e.which >= 37 && e.which <= 40 ) return;
+		
 		this.value = this.value.replace(/\D/g, '')
 			.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
@@ -133,7 +133,6 @@ var MortgageCalculatorModule = (function () {
 			currentLoanAmount;
 
 		if ( elementName === 'homevalue' ) {
-
 			var  percentageValue;
 			currentHomeValue = (_isEmpty(currentElement.value) && _itMatches(currentElement.value)) ? _emptyFieldMsg(currentElement) : (currentElement.nextElementSibling.style.display = 'none', currentElement.parentNode.classList.remove( 'has-error' ), parseFloat( currentElement.value.replace(/,/g, '') ).toFixed(2));
 			percentageValue = parseFloat( calculatorElements.getPercentValue() ).toFixed(2);
@@ -142,10 +141,9 @@ var MortgageCalculatorModule = (function () {
 			amounts.newAmount = (currentHomeValue * percentageValue) / 100;
 			amounts.newAmountElement = calculatorElements.downPayment;
 
-			console.log(amounts)
-
 			_setNewValue( amounts );
 			currentLoanAmount = parseInt(calculatorElements.loanAmount.value.replace(/,/g, ''));
+
 		} else if ( elementName === 'loan' ) {
 			/**
 			 * TODO: enable Loan Amount Input Field
@@ -153,8 +151,6 @@ var MortgageCalculatorModule = (function () {
 			 */
 			var currentAmmount = parseFloat(currentElement.value).toFixed(2);
 			initHomeValue = ((currentAmmount <= 5000 || isNaN( currentAmmount )) ? 5000 : currentAmmount) - initDownPay;
-			console.log(initLoan)
-			
 
 		} else if ( elementName === 'dp' || elementName === 'percent' || elementName === 'homevalue' ) {
 			switch(elementName) {
@@ -173,19 +169,9 @@ var MortgageCalculatorModule = (function () {
 					amounts.newAmount = (!dpToPercent || dpToPercent === 'undefined') ? 0 : dpToPercent;
 					amounts.newAmountElement = calculatorElements.percentage;
 
-
 					currentLoanAmount = parseInt(calculatorElements.loanAmount.value.replace(/,/g, ''));
-					
-
 					break;
 				case 'percent':
-					/**
-					 * TODO: if Percentage is modified
-					 * 	then downpayment
-					 * 	then loan amount
-					 * 	then results
-					 * 	then errors
-					 */
 					var percentToDp, currentAmmount;
 					currentAmmount = (_isEmpty(currentElement.value)) ? _emptyFieldMsg(currentElement) : _checkPercentageAmount(currentElement.value, currentElement);
 					currentAmmount = (isNaN(currentAmmount)) ? 0 : currentAmmount;
@@ -198,40 +184,22 @@ var MortgageCalculatorModule = (function () {
 					amounts.loanamountElement = calculatorElements.loanAmount;
 
 					currentLoanAmount = parseInt(calculatorElements.loanAmount.value.replace(/,/g, ''));
-					
-
 					break;
 			}
 			_setNewValue( amounts );
 			currentLoanAmount = parseInt(calculatorElements.loanAmount.value.replace(/,/g, ''));
-			
 
 		} else if ( elementName === 'apr' ) {
-			/**
-			 * TODO: if APR is modified
-			 * 	then results
-			 */
 			var currentApr = (_isEmpty( currentElement.value )) ? _emptyFieldMsg( currentElement ) : _checkAPRAmount( currentElement.value, currentElement );
 			initApr = (currentApr <= 1 || isNaN( currentApr )) ? 1 : currentApr;
 			currentLoanAmount = parseInt(calculatorElements.loanAmount.value.replace(/,/g, ''));
-			
-			// console.log(initLoan)
-			
+
 		} else if ( elementName === 'dropdown' ) {
-			/**
-			 * TODO: if Dropdown is modified
-			 * 	then results
-			 */
-			currentLoanAmount = parseInt(calculatorElements.loanAmount.value.replace(/,/g, ''));
-			currentLoanAmount = (!currentLoanAmount || currentLoanAmount === 'undefined' || isNaN(currentLoanAmount)) ? alert('no amoung for loan') : currentLoanAmount;
-			console.log(initLoan)
+			currentLoanAmount = parseInt( calculatorElements.loanAmount.value.replace(/,/g, '') );
+			currentLoanAmount = (!currentLoanAmount || currentLoanAmount === 'undefined' || isNaN( currentLoanAmount )) ? _emptyFieldMsg( currentElement ) : currentLoanAmount;
 			initApr = initApr || 1;
 			initTermInYears = parseInt(10, currentElement.value );
-			console.log(`p: ${initLoan} \nr: ${initApr} \nn: ${initTermInYears}`);
 		}
-
-		console.log(`initLoan ${initLoan} \nInitApr ${initApr} \nInitTermInYears ${initTermInYears}`)
-
 		// update results every keyup
 		MortgageCalculatorModule.initCalculator( currentLoanAmount, initApr, initTermInYears, calculatorElements.resultDiv );
 	}
@@ -244,11 +212,18 @@ var MortgageCalculatorModule = (function () {
 	 * @param {HTMLElement} resultEl - element to be modified
 	 */
 	var initCalculator = function (p, r, n, resultEl) {
-		var result = _calculateMortgage(p, r, n);
-		resultEl.innerHTML = result.toLocaleString('USD', {
+		var result, formatter;
+		// format to US-Currency
+		formatter = new Intl.NumberFormat('en-US', {
 			style: 'currency',
-			currency: 'USD'
+			currency: 'USD',
+			minimumFractionDigits: 2
 		});
+		// results from calculator
+		result = _calculateMortgage(p, r, n);
+
+		// display results
+		resultEl.innerHTML = formatter.format(result);
 	}
 
 	/*----------------------------------------
@@ -330,7 +305,6 @@ var MortgageCalculatorModule = (function () {
 		}
 	}
 
-
 	return {
 		initCalculator: initCalculator,
 		updateValues: updateValues
@@ -338,8 +312,7 @@ var MortgageCalculatorModule = (function () {
 })();
 	
 /**
- * TODO:
- * 	Create element Percentage
+ * elements and values
  */
 var calculatorElements = {
 	formSection: document.querySelector( '.form-section' ),	// reference to form
@@ -351,14 +324,13 @@ var calculatorElements = {
 	termInYears: document.getElementById( 'termInYears' ),
 	resultDiv: document.getElementById( 'results' ),
 	getHomeValue: function() {
-		return parseInt(this.homeValue.value.replace(/,/g, '')) || 0;
+		return parseFloat(this.homeValue.value.replace(/,/g, '')).toFixed( 2 ) || 0;
 	},
 	getLoanAmountValue: function () {
 		return parseFloat( this.loanAmount.value.replace(/,/g, '') ).toFixed( 2 ) || 0;
 	},
 	getLoanAmountCalcValue: function () {
 		var result =  this.getHomeValue() - ((this.getHomeValue() * this.getPercentValue() ) / 100);
-		console.log(result);
 		return this.loanAmount.value = result;
 	},
 	getPercentValue: function () {
@@ -417,11 +389,30 @@ MortgageCalculatorModule.initCalculator(
 );
 
 /**
- * TODO:
- * 	change `keyup` listener to `keypress` or something to track only numbers
- * 
- * Event Listeners for each input
- * 
+ * Purposes of this Demo
+ * when page loads, re-format values
+ */
+document.onreadystatechange = function () {
+	if ( document.readyState === 'interactive' ) {
+		/**
+		  * TODO:
+		  * 	When applying it on real world, remove document ready listener and 
+		  * 	use the popup listener to change the values 
+		  */
+		// initial values
+		var initialHV = calculatorElements.homeValue,
+			initialLV = calculatorElements.loanAmount,
+			initialDPV = calculatorElements.downPayment;
+
+		// formatted values
+		initialHV.value = initialHV.value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		initialLV.value = initialLV.value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		initialDPV.value = initialDPV.value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	}
+}
+
+/**
+ * display results when typing
  */
 calculatorElements.homeValue.addEventListener('keyup', MortgageCalculatorModule.updateValues, false);
 calculatorElements.loanAmount.addEventListener('keyup', MortgageCalculatorModule.updateValues, false);
