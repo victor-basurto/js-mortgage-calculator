@@ -19,6 +19,7 @@ body { font-size: 16px; }
 	display: grid;
 	grid-template-columns: 150px 1fr;
 	grid-template-rows: 30px 30px;
+	position: relative;
 }
 #results {
 	color: red;
@@ -39,3 +40,15 @@ body { font-size: 16px; }
 	font-style: italic;
 	color: red;
 }
+.group > i {
+	position: absolute;
+	display: block;
+	transform: translate(0, -50%);
+	top: 50%;
+	pointer-events: none;
+	width: 25px;
+	text-align: center;
+}
+.dollar-group > i { left: 150px; }
+.percent-group > i { right: 0; }
+.dollar-group input { padding-left: 25px; }

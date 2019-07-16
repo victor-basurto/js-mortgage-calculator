@@ -134,7 +134,7 @@ var MortgageCalculatorModule = (function () {
 
 		if ( elementName === 'homevalue' ) {
 			var  percentageValue;
-			currentHomeValue = (_isEmpty(currentElement.value) && _itMatches(currentElement.value)) ? _emptyFieldMsg(currentElement) : (currentElement.nextElementSibling.style.display = 'none', currentElement.parentNode.classList.remove( 'has-error' ), parseFloat( currentElement.value.replace(/,/g, '') ).toFixed(2));
+			currentHomeValue = (_isEmpty(currentElement.value) && _itMatches(currentElement.value)) ? _emptyFieldMsg(currentElement) : (getNextSibling(currentElement, '.error').style.display = 'none', currentElement.parentNode.classList.remove( 'has-error' ), parseFloat( currentElement.value.replace(/,/g, '') ).toFixed(2));
 			percentageValue = parseFloat( calculatorElements.getPercentValue() ).toFixed(2);
 			amounts.newLoan = currentHomeValue - ((currentHomeValue * percentageValue) / 100);
 			amounts.loanamountElement = calculatorElements.loanAmount;
@@ -226,6 +226,27 @@ var MortgageCalculatorModule = (function () {
 		resultEl.innerHTML = formatter.format(result);
 	}
 
+	/**
+	 * get sibling that matches selector
+	 * @param {HTMLElement} el - current element
+	 * @param {HTMLElement} selector - target element
+	 */
+	var getNextSibling = function (el, selector) {
+		// get the next sibling element
+		var sibling = el.nextElementSibling;
+
+		// if there's no selector, return the first sibling
+		if ( !selector ) return sibling;
+
+		// if the sibling matches our selector, use it
+		// if not, jump to th enext sibling and continue the loop
+		while ( sibling ) {
+			if ( sibling.matches(selector) ) {
+				return sibling;
+			}
+			sibling = sibling.nextElementSibling;
+		}
+	}
 	/*----------------------------------------
 		Errors Checker
 	 ------------------------------------------*/
@@ -234,7 +255,7 @@ var MortgageCalculatorModule = (function () {
 		return isEmpty;
 	}
 	var _emptyFieldMsg = function (el) {
-		var errorEl = el.nextElementSibling;
+		var errorEl = getNextSibling( el, '.error' );
 		var errorGroup = el.parentNode;
 		errorEl.style.display = 'block';
 		errorEl.innerHTML = calculatorElements.errors.emptyField;
@@ -247,7 +268,7 @@ var MortgageCalculatorModule = (function () {
 	 * @param {*} el 
 	 */
 	var _checkDownPaymentAmount = function (downpayment, homevalue, el) {
-		var errorEl = el.nextElementSibling;
+		var errorEl = getNextSibling( el, '.error' );
 		var currentValue = parseInt( downpayment.replace(/,/g, '') );
 		var errorGroup = el.parentNode;
 
@@ -263,7 +284,7 @@ var MortgageCalculatorModule = (function () {
 	}
 
 	var _checkPercentageAmount = function (percentage, el) {
-		var errorEl = el.nextElementSibling;
+		var errorEl = getNextSibling( el, '.error' );
 		var currentValue = parseFloat( percentage ).toFixed( 2 );
 		var errorGroup = el.parentNode;
 
@@ -279,7 +300,7 @@ var MortgageCalculatorModule = (function () {
 	}
 
 	var _checkAPRAmount = function (apr, el) {
-		var errorEl = el.nextElementSibling;
+		var errorEl = getNextSibling( el, '.error' );
 		var currentValue = parseFloat( apr ).toFixed( 2 );
 		var errorGroup = el.parentNode;
 
@@ -307,7 +328,8 @@ var MortgageCalculatorModule = (function () {
 
 	return {
 		initCalculator: initCalculator,
-		updateValues: updateValues
+		updateValues: updateValues,
+		getNextSibling: getNextSibling
 	}
 })();
 	
