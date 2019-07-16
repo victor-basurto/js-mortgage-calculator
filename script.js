@@ -206,3 +206,17 @@ function updateValues(e) {
 	// update results every keyup
 	MortgageCalculatorModule.initCalculator( initLoan, initApr, initTermInYears, calculatorElements.resultDiv );
 }
+
+
+currentHomeValue = checkHomeValue(currentElement);
+
+function checkHomeValue(currentEl) {
+	if ( _isEmpty(currentEl.value) && _itMatches(currentEl.value) ) {
+		_emptyFieldMsg(currentEl);
+		
+	} else {
+		getNextSibling(currentEl, '.error').style.display = 'none';
+		currentEl.parentNode.classList.remove( 'has-error' );
+		parseFloat( currentElement.value.replace(/,/g, '') ).toFixed(2)
+	}
+}

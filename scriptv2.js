@@ -100,6 +100,21 @@ var MortgageCalculatorModule = (function () {
 			opts.newAmountElement.value = newAmount;
 		}
 	}
+	/**
+	 * check if homevalue has value
+	 * @param {HTMLElement} currentEl - current element
+	 * @return number
+	 */
+	var _checkHomeValue = function (currentEl) {
+		if ( _isEmpty(currentEl.value) && !_itMatches(currentEl.value) ) {
+			_emptyFieldMsg(currentEl);
+			return currentEl.value = 0;
+		} else {
+			getNextSibling(currentEl, '.error').style.display = 'none';
+			currentEl.parentNode.classList.remove( 'has-error' );
+			return parseFloat( currentEl.value.replace(/,/g, '') ).toFixed(2);
+		}
+	}
 	/*----------------------------------------
 		Public Methods
 	 ------------------------------------------*/
@@ -134,7 +149,7 @@ var MortgageCalculatorModule = (function () {
 
 		if ( elementName === 'homevalue' ) {
 			var  percentageValue;
-			currentHomeValue = (_isEmpty(currentElement.value) && _itMatches(currentElement.value)) ? _emptyFieldMsg(currentElement) : (getNextSibling(currentElement, '.error').style.display = 'none', currentElement.parentNode.classList.remove( 'has-error' ), parseFloat( currentElement.value.replace(/,/g, '') ).toFixed(2));
+			currentHomeValue = _checkHomeValue( currentElement );
 			percentageValue = parseFloat( calculatorElements.getPercentValue() ).toFixed(2);
 			amounts.newLoan = currentHomeValue - ((currentHomeValue * percentageValue) / 100);
 			amounts.loanamountElement = calculatorElements.loanAmount;
