@@ -110,7 +110,7 @@ var MortgageCalculatorModule = (function () {
 			_emptyFieldMsg(currentEl);
 			return currentEl.value = 0;
 		} else {
-			getNextSibling(currentEl, '.error').style.display = 'none';
+			getNextSibling(currentEl, '.mortgage-inputs--error').style.display = 'none';
 			currentEl.parentNode.classList.remove( 'has-error' );
 			return parseFloat( currentEl.value.replace(/,/g, '') ).toFixed(2);
 		}
@@ -270,7 +270,7 @@ var MortgageCalculatorModule = (function () {
 		return isEmpty;
 	}
 	var _emptyFieldMsg = function (el) {
-		var errorEl = getNextSibling( el, '.error' );
+		var errorEl = getNextSibling( el, '.mortgage-inputs--error' );
 		var errorGroup = el.parentNode;
 		errorEl.style.display = 'block';
 		errorEl.innerHTML = calculatorElements.errors.emptyField;
@@ -283,7 +283,7 @@ var MortgageCalculatorModule = (function () {
 	 * @param {*} el 
 	 */
 	var _checkDownPaymentAmount = function (downpayment, homevalue, el) {
-		var errorEl = getNextSibling( el, '.error' );
+		var errorEl = getNextSibling( el, '.mortgage-inputs--error' );
 		var currentValue = parseInt( downpayment.replace(/,/g, '') );
 		var errorGroup = el.parentNode;
 
@@ -299,7 +299,7 @@ var MortgageCalculatorModule = (function () {
 	}
 
 	var _checkPercentageAmount = function (percentage, el) {
-		var errorEl = getNextSibling( el, '.error' );
+		var errorEl = getNextSibling( el, '.mortgage-inputs--error' );
 		var currentValue = parseFloat( percentage ).toFixed( 2 );
 		var errorGroup = el.parentNode;
 
@@ -315,7 +315,7 @@ var MortgageCalculatorModule = (function () {
 	}
 
 	var _checkAPRAmount = function (apr, el) {
-		var errorEl = getNextSibling( el, '.error' );
+		var errorEl = getNextSibling( el, '.mortgage-inputs--error' );
 		var currentValue = parseFloat( apr ).toFixed( 2 );
 		var errorGroup = el.parentNode;
 

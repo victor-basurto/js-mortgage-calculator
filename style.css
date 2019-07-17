@@ -4,22 +4,38 @@ html, body {
 	box-sizing: border-box;
 }
 body { font-size: 16px; }
-.form-section {
+.mortgage-calculator-section {
+	width: 80%;
+	margin: auto;
 	display: grid;
-    grid-template-columns: 600px;
+	grid-template-columns: 70% 30%;
+}
+.mortgage-calculator-section .mortgage-inputs {
+	display: grid;
+    grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(6, 30px);
     grid-gap: 2rem;
-    width: 80%;
-    margin: auto;
     height: 100vh;
     justify-content: center;
 	align-content: center;
 }
-.form-section .group {
+.mortgage-calculator-section .mortgage-inputs__group {
 	display: grid;
 	grid-template-columns: 150px 1fr;
 	grid-template-rows: 30px 30px;
 	position: relative;
+}
+
+
+.mortgage-calculator-section .mortgage-inputs__group { grid-column: 1/6; }
+.mortgage-calculator-section .home-value-input { grid-column: 1/3; }
+.mortgage-calculator-section .loan-value-input { grid-column: 3/6; }
+
+
+.mortgage-calculator-section .mortgage-inputs__results {
+	align-self: center;
+	transform: translate(0, -50%);
+
 }
 #results {
 	color: red;
@@ -34,13 +50,13 @@ body { font-size: 16px; }
 
 .has-error input,
 .has-error input:focus { border: 1px solid red; outline: 0; }
-.error {
+.mortgage-inputs--error {
 	grid-column: 2/3;
 	display: none;
 	font-style: italic;
 	color: red;
 }
-.group > i {
+.mortgage-inputs__group > i {
 	position: absolute;
 	display: block;
 	transform: translate(0, -50%);

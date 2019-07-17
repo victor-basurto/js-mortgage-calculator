@@ -9,47 +9,48 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<div class="form-section">
-		<div class="group dollar-group">
-			<label>Home Value:</label>
-			<input type="text" id="home-value" name="homevalue" required value="500000">
-			<i>$</i>
-			<div class="error">value should not be empty</div>
+	<div class="mortgage-calculator-section">
+		<div class="mortgage-inputs form-section">
+			<div class="mortgage-inputs__group dollar-group home-value-input">
+				<label>Home Value:</label>
+				<input type="text" id="home-value" name="homevalue" required value="500000">
+				<i>$</i>
+				<div class="mortgage-inputs--error">value should not be empty</div>
+			</div>
+			<div class="mortgage-inputs__group dollar-group loan-value-input">
+				<label>Loan Amount:</label>
+				<input disabled type="text" id="amount" name="loan" value="0">
+				<i>$</i>
+				<div class="mortgage-inputs--error"></div>
+			</div>
+			<div class="mortgage-inputs__group dollar-group downpayment-value-input">
+				<label>Down Payment:</label>
+				<input type="text" id="downPayment" name="dp" value="0">
+				<i>$</i>
+				<div class="mortgage-inputs--error"></div>
+			</div>
+			<div class="mortgage-inputs__group percent-group percent-value-input">
+				<label>Percent:</label>
+				<input type="text" id="percent" name="percent" value="20">
+				<i>%</i>
+				<div class="mortgage-inputs--error"></div>
+			</div>
+			<div class="mortgage-inputs__group interest-group apr-value-input">
+				<label>APR (Interest):</label>
+				<input type="text" id="interestApr" name="apr" value="4.5">
+				<div class="mortgage-inputs--error"></div>
+			</div>
+			<div class="mortgage-inputs__group dp-group dropdown-value-input">
+				<label>Period (How Long):</label>
+				<select name="dropdown" id="termInYears">
+					<option value="5">5 years</option>
+					<option value="7">7 years</option>
+					<option value="15">15 years</option>
+					<option selected value="30">30 years</option>
+				</select>
+			</div>
 		</div>
-		<div class="group dollar-group">
-			<label>Loan Amount:</label>
-			<input disabled type="text" id="amount" name="loan" value="0">
-			<i>$</i>
-			<div class="error"></div>
-		</div>
-		<div class="group dollar-group">
-			<label>Down Payment:</label>
-			<input type="text" id="downPayment" name="dp" value="0">
-			<i>$</i>
-			<div class="error"></div>
-		</div>
-		<div class="group percent-group">
-			<label>Percent:</label>
-			<input type="text" id="percent" name="percent" value="20">
-			<i>%</i>
-			<div class="error"></div>
-		</div>
-		<div class="group interest-group">
-			<label>APR (Interest):</label>
-			<input type="text" id="interestApr" name="apr" value="4.5">
-			<div class="error"></div>
-		</div>
-		<div class="group dp-group">
-			<label>Period (How Long):</label>
-			<select name="dropdown" id="termInYears">
-				<option value="5">5 years</option>
-				<option value="7">7 years</option>
-				<option value="15">15 years</option>
-				<option selected value="30">30 years</option>
-			</select>
-		</div>
-
-		<div class="results">
+		<div class="mortgage-inputs__results">
 			<p>total monthly payments: </p>
 			<p id="results"></p>
 		</div>

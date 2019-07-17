@@ -98,8 +98,6 @@ if ( formSection ) {
 		}
 	}
 	
-	
-	
 	/**
 	 * display results when typing
 	 */
