@@ -9,7 +9,7 @@ var MortgageCalculatorModule = (function () {
 	 */
 	var _percentToDecimal = function( percent ) {
 		return ( percent / 12 ) / 100;
-	}
+	};
 	/**
 	 * Convert years into months
 	 * @param {Number} year - year form input field 
@@ -17,7 +17,7 @@ var MortgageCalculatorModule = (function () {
 	 */
 	var _yearsToMonth = function( year ) {
 		return year * 12;
-	}
+	};
 	/**
 	 * Formula:
 	 * c = ((6.5 / 100 / 12) * 20000) / (1 - (Math.pow((1+ (6.5/100/12)), (-30 * 12))))
@@ -41,7 +41,7 @@ var MortgageCalculatorModule = (function () {
 	
 		// return number of payments
 		return monthlyPayments;
-	}
+	};
 
 	/**
 	 * Round to nearest half.... Currently not in use
@@ -51,7 +51,7 @@ var MortgageCalculatorModule = (function () {
 	var _roundToNearestHalf = function (percentage, precision) {
 		var result = Math.round( percentage / precision ) * precision;
 		return result;
-	}
+	};
 
 	/**
 	 * Get new amount from percentage and current home value
@@ -62,7 +62,7 @@ var MortgageCalculatorModule = (function () {
 	var _percentToAmount = function (amount, percent) {
 		var result = ( amount * percent ) / 100;
 		return parseInt( result );
-	}
+	};
 
 	/**
 	 * Convert amount and downpayment into Percentage
@@ -80,7 +80,7 @@ var MortgageCalculatorModule = (function () {
 			return result = Math.round( result / 0.5 ) * 0.5;
 		}
 		return result;
-	}
+	};
 
 	/**
 	 * function receives an object and mofied an element after evalute the results
@@ -99,7 +99,7 @@ var MortgageCalculatorModule = (function () {
 		} else {
 			opts.newAmountElement.value = newAmount;
 		}
-	}
+	};
 	/**
 	 * check if homevalue has value
 	 * @param {HTMLElement} currentEl - current element
@@ -114,7 +114,7 @@ var MortgageCalculatorModule = (function () {
 			currentEl.parentNode.classList.remove( 'has-error' );
 			return parseFloat( currentEl.value.replace(/,/g, '') ).toFixed(2);
 		}
-	}
+	};
 	/*----------------------------------------
 		Public Methods
 	 ------------------------------------------*/
@@ -217,7 +217,7 @@ var MortgageCalculatorModule = (function () {
 		}
 		// update results every keyup
 		MortgageCalculatorModule.initCalculator( currentLoanAmount, initApr, initTermInYears, calculatorElements.resultDiv );
-	}
+	};
 
 	/**
 	 * Initialize calculator with default values
@@ -239,7 +239,7 @@ var MortgageCalculatorModule = (function () {
 
 		// display results
 		resultEl.innerHTML = formatter.format(result);
-	}
+	};
 
 	/**
 	 * get sibling that matches selector
@@ -347,113 +347,3 @@ var MortgageCalculatorModule = (function () {
 		getNextSibling: getNextSibling
 	}
 })();
-	
-/**
- * elements and values
- */
-var calculatorElements = {
-	formSection: document.querySelector( '.form-section' ),	// reference to form
-	homeValue: document.getElementById('home-value'),
-	loanAmount: document.getElementById( 'amount' ),
-	downPayment: document.getElementById( 'downPayment' ), // default 20%
-	percentage: document.getElementById( 'percent' ),
-	apr: document.getElementById( 'interestApr' ),
-	termInYears: document.getElementById( 'termInYears' ),
-	resultDiv: document.getElementById( 'results' ),
-	getHomeValue: function() {
-		return parseFloat(this.homeValue.value.replace(/,/g, '')).toFixed( 2 ) || 0;
-	},
-	getLoanAmountValue: function () {
-		return parseFloat( this.loanAmount.value.replace(/,/g, '') ).toFixed( 2 ) || 0;
-	},
-	getLoanAmountCalcValue: function () {
-		var result =  this.getHomeValue() - ((this.getHomeValue() * this.getPercentValue() ) / 100);
-		return this.loanAmount.value = result;
-	},
-	getPercentValue: function () {
-		return parseFloat( this.percentage.value ).toFixed(2) || 0;
-	},
-	getDownpaymentValue: function () {
-		return parseFloat( this.downPayment.value.replace(/,/g, '') ).toFixed( 2 ) || 0;
-	},
-	getDownpaymentCalcValue: function () {
-		var result = (this.getHomeValue() * this.getPercentValue() ) / 100;
-		this.downPayment.value = result;
-	},
-	getLoanDownPaymentResult: function () {
-		if ( this.getDownpaymentCalcValue() ) {
-			return this.getLoanAmountCalcValue() - this.getDownpaymentCalcValue();
-		} else {
-			return this.getLoanAmountCalcValue();
-		}
-	},
-	getAprValue: function () {
-		return parseFloat( this.apr.value ).toFixed(2) || 0;
-	},
-	getTermInYearsValue: function () {
-		return parseInt( 10, this.termInYears.value );
-	},
-
-	errors: {
-		/**
-		 * TODO:
-		 * 	Set errors
-		 */
-		homevalueErrors: {
-			greaterThanFiveThousandMsg: 'Value should be greater than 5,000'
-		},
-		downPaymentErrors: {
-			greaterThanHomeValueMsg: 'Downpayment is bigger than Homevalue'
-		},
-		percentErrors: {
-			greaterThanOneHundred: 'Value should not exceed 100%'
-		},
-		aprErrors: {
-			greaterThanFifty: 'Value should\'nt exceed 50% of APR'
-		},
-		emptyField: 'field should\'nt be empty'
-	}
-}
-
-/**
- * Initialize Results
- */
-MortgageCalculatorModule.initCalculator(
-	calculatorElements.getLoanDownPaymentResult(), 
-	calculatorElements.getAprValue(), 
-	calculatorElements.getTermInYearsValue(),
-	calculatorElements.resultDiv
-);
-
-/**
- * Purposes of this Demo
- * when page loads, re-format values
- */
-document.onreadystatechange = function () {
-	if ( document.readyState === 'interactive' ) {
-		/**
-		  * TODO:
-		  * 	When applying it on real world, remove document ready listener and 
-		  * 	use the popup listener to change the values 
-		  */
-		// initial values
-		var initialHV = calculatorElements.homeValue,
-			initialLV = calculatorElements.loanAmount,
-			initialDPV = calculatorElements.downPayment;
-
-		// formatted values
-		initialHV.value = initialHV.value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-		initialLV.value = initialLV.value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-		initialDPV.value = initialDPV.value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-	}
-}
-
-/**
- * display results when typing
- */
-calculatorElements.homeValue.addEventListener('keyup', MortgageCalculatorModule.updateValues, false);
-calculatorElements.loanAmount.addEventListener('keyup', MortgageCalculatorModule.updateValues, false);
-calculatorElements.percentage.addEventListener('keyup', MortgageCalculatorModule.updateValues, false);
-calculatorElements.apr.addEventListener('keyup', MortgageCalculatorModule.updateValues, false);
-calculatorElements.downPayment.addEventListener('keyup', MortgageCalculatorModule.updateValues, false);
-calculatorElements.termInYears.addEventListener('change', MortgageCalculatorModule.updateValues, false);
