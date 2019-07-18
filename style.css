@@ -16,8 +16,9 @@ body { font-size: 16px; }
 .mortgage-calculator-section .mortgage-inputs {
 	display: grid;
     grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(2, 60px);
-    grid-gap: 1rem;
+	grid-template-rows: repeat(2, 60px);
+	grid-column-gap: 1rem;
+    grid-row-gap: 2rem;
     justify-content: center;
 	align-content: center;
 	grid-template-areas: 
@@ -110,6 +111,7 @@ body { font-size: 16px; }
 	.mortgage-calculator-section .mortgage-inputs {
 		grid-template-columns: repeat(4, 1fr);
 		grid-template-rows: repeat(6, 60px);
+		grid-row-gap: 1.5rem;
 		grid-template-areas: 
 			"home home home home"
 			"loan loan loan loan"
