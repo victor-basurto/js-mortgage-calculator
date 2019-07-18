@@ -238,7 +238,7 @@ var MortgageCalculatorModule = (function () {
 		result = _calculateMortgage(p, r, n);
 
 		// display results
-		resultEl.innerHTML = formatter.format(result);
+		resultEl.value = formatter.format(result);
 	};
 
 	/**
