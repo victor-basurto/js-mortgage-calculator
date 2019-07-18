@@ -4,67 +4,116 @@ html, body {
 	box-sizing: border-box;
 }
 body { font-size: 16px; }
+.calculator-container h2 { text-align: center; }
 .mortgage-calculator-section {
-	width: 80%;
+	height: 70vh;
+	width: 50%;
 	margin: auto;
-	display: grid;
-	grid-template-columns: 70% 30%;
+	padding: 2rem;
+	border: 2px solid #eeeeee;
+	border-radius: 5px;
 }
 .mortgage-calculator-section .mortgage-inputs {
 	display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(6, 30px);
-    grid-gap: 2rem;
-    height: 100vh;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(6, 60px);
+    grid-gap: 1rem;
     justify-content: center;
 	align-content: center;
+	grid-template-areas: 
+		"home home home loan loan loan dp dp dp percent"
+		"apr apr apr dd dd dd results results results results";
 }
+.mortgage-calculator-section .mortgage-inputs__group { position: relative; }
+
 .mortgage-calculator-section .mortgage-inputs__group {
-	display: grid;
-	grid-template-columns: 150px 1fr;
-	grid-template-rows: 30px 30px;
-	position: relative;
+	display: flex;
+	flex-direction: column;
 }
+.mortgage-calculator-section .mortgage-inputs__group { grid-column: 1/10; }
+.mortgage-calculator-section .percent-value-input { overflow: hidden; }
+.mortgage-calculator-section .percent-value-input input {
+	width: -moz-available;
+	width: -webkit-fill-available;
+	width: fill-available;
+}
+/* grid area names */
+.mortgage-calculator-section .home-value-input { grid-area: home; }
+.mortgage-calculator-section .loan-value-input { grid-area: loan; }
+.mortgage-calculator-section .downpayment-value-input { grid-area: dp; }
+.mortgage-calculator-section .percent-value-input { grid-area: percent; }
+.mortgage-calculator-section .apr-value-input { grid-area: apr; }
+.mortgage-calculator-section .dropdown-value-input { grid-area: dd; }
+.mortgage-calculator-section .mortgage-inputs__results { grid-area: results; }
 
 
-.mortgage-calculator-section .mortgage-inputs__group { grid-column: 1/6; }
-.mortgage-calculator-section .home-value-input { grid-column: 1/3; }
-.mortgage-calculator-section .loan-value-input { grid-column: 3/6; }
-
-
+.mortgage-calculator-section .percent-value-input { margin-left: -17px; }
+.mortgage-calculator-section .apr-value-input input,
+.mortgage-calculator-section .percent-value-input input,
+.mortgage-calculator-section .dropdown-value-input select { padding-left: 8px; }
 .mortgage-calculator-section .mortgage-inputs__results {
-	align-self: center;
-	transform: translate(0, -50%);
-
+	display: flex;
+	flex-direction: column;
 }
-#results {
+.mortgage-calculator-section #results {
 	color: red;
 	font-weight: 800;
-	font-size: 3.5rem;
 	margin: 0;
+	padding-left: 10px;
+	font-size: 1.2rem;
 }
-#amount {
+.mortgage-calculator-section #amount {
 	background: #e5e5e5;
 	color: red;
 }
 
-.has-error input,
-.has-error input:focus { border: 1px solid red; outline: 0; }
-.mortgage-inputs--error {
+.mortgage-calculator-section .has-error input,
+.mortgage-calculator-section .has-error input:focus { border: 1px solid red; outline: 0; }
+.mortgage-calculator-section .mortgage-inputs--error {
 	grid-column: 2/3;
 	display: none;
 	font-style: italic;
 	color: red;
 }
-.mortgage-inputs__group > i {
+.mortgage-calculator-section .mortgage-inputs__group > i {
 	position: absolute;
 	display: block;
 	transform: translate(0, -50%);
-	top: 50%;
+	top: 66%;
 	pointer-events: none;
 	width: 25px;
 	text-align: center;
+	font-style: unset;
 }
-.dollar-group > i { left: 150px; }
-.percent-group > i { right: 0; }
-.dollar-group input { padding-left: 25px; }
+.mortgage-calculator-section input { border: 1px solid #ccc; }
+.mortgage-calculator-section .percent-group > i,
+.mortgage-calculator-section .interest-group > i { right: 0; }
+.mortgage-calculator-section .dollar-group input { padding-left: 25px; }
+.mortgage-calculator-section .mortgage-inputs label { display: block; }
+.mortgage-calculator-section .mortgage-inputs input { min-height: 35px; }
+.mortgage-calculator-section .mortgage-inputs select { min-height: 39px; }
+
+/*-----------------------------------------------------------
+	Media Queries - Responsive
+-------------------------------------------------------------*/
+@media (max-width: 1023px) and (min-width: 768px) {
+	.mortgage-calculator-section .mortgage-inputs {
+		grid-template-columns: repeat(8, 1fr);
+		grid-template-areas: 
+			"home home home home loan loan loan loan"
+			"dp dp dp percent apr apr apr apr"
+			"dd dd dd dd results results results results";
+	}
+}
+@media (max-width: 767px) {
+	.mortgage-calculator-section .mortgage-inputs {
+		grid-template-columns: repeat(4, 1fr);
+		grid-template-areas: 
+			"home home home home"
+			"loan loan loan loan"
+			"dp dp dp percent"
+			"apr apr apr apr"
+			"dd dd dd dd"
+			"results results results results";
+	}
+}
