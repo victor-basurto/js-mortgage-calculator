@@ -91,7 +91,7 @@ body { font-size: 16px; }
 .mortgage-calculator-section .dollar-group input { padding-left: 25px; }
 .mortgage-calculator-section .mortgage-inputs label { display: block; }
 .mortgage-calculator-section .mortgage-inputs input { min-height: 35px; }
-.mortgage-calculator-section .mortgage-inputs select { min-height: 39px; }
+.mortgage-calculator-section .mortgage-inputs select { min-height: 39px; height: 39px; }
 
 /*-----------------------------------------------------------
 	Media Queries - Responsive
