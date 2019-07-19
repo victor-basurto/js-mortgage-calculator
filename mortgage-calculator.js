@@ -94,8 +94,13 @@ var MortgageCalculatorModule = (function () {
 
 		// if newloan and newamount exists
 		if ( opts.newLoan >= 0 ) {
-			opts.loanamountElement.value = newLoan;
-			opts.newAmountElement.value = newAmount;
+			if ( opts.newAmountElement !== document.querySelector( 'input#percent' ) || opts.newAmount !== 0) {
+				opts.loanamountElement.value = newLoan;
+				opts.newAmountElement.value = newAmount;
+			} else {
+				opts.newAmountElement.value = '';
+				opts.newAmountElement.setAttribute( 'placeholder', 0 );
+			}
 		} else {
 			opts.newAmountElement.value = newAmount;
 		}
@@ -172,7 +177,7 @@ var MortgageCalculatorModule = (function () {
 				case 'dp':
 					var dpToPercent, currentDown; 
 					currentHomeValue = calculatorElements.getHomeValue();
-					currentDown = (_isEmpty(currentElement.value) ? _emptyFieldMsg(currentElement) : _checkDownPaymentAmount(currentElement.value, currentHomeValue, currentElement));
+					currentDown = (_isEmpty(currentElement.value) ? _replaceWithZero( currentElement ) : _checkDownPaymentAmount(currentElement.value, currentHomeValue, currentElement));
 					
 					initDownPay = (!isNaN( currentDown )) ? currentDown : 0;
 					
@@ -180,6 +185,9 @@ var MortgageCalculatorModule = (function () {
 					amounts.loanamountElement = calculatorElements.loanAmount;
 
 					dpToPercent = _amountToPercent( currentHomeValue, initDownPay );
+					if ( dpToPercent < "0.2" ) {
+						dpToPercent = 0;
+					}
 
 					amounts.newAmount = (!dpToPercent || dpToPercent === 'undefined') ? 0 : dpToPercent;
 					amounts.newAmountElement = calculatorElements.percentage;
@@ -192,13 +200,8 @@ var MortgageCalculatorModule = (function () {
 					if ( currentElement.value.replace(/,/g, '') > 100 ) {
 						currentElement.value = 100;
 					}
-					// if current value is less than 0 replace it with 0 placeholder and set currentAmount to 0
-					if ( currentElement.value < 0 || !currentElement.value || currentElement.value === '0' ) {
-						currentElement.value = '';
-						currentElement.setAttribute( 'placeholder', 0 );
-						currentAmmount = 0;
-					}
-					currentAmmount = (_isEmpty(currentElement.value)) ? _emptyFieldMsg(currentElement) : _checkPercentageAmount(currentElement.value, currentElement);
+					
+					currentAmmount = (_isEmpty(currentElement.value)) ? _replaceWithZero( currentElement ) : _checkPercentageAmount(currentElement.value, currentElement);
 					currentAmmount = (isNaN(currentAmmount)) ? 0 : currentAmmount;
 					currentHomeValue = calculatorElements.getHomeValue();
 					percentToDp = _percentToAmount(currentHomeValue, currentAmmount);
@@ -215,7 +218,7 @@ var MortgageCalculatorModule = (function () {
 			currentLoanAmount = parseInt(calculatorElements.loanAmount.value.replace(/,/g, ''));
 
 		} else if ( elementName === 'apr' ) {
-			var currentApr = (_isEmpty( currentElement.value )) ? _emptyFieldMsg( currentElement ) : _checkAPRAmount( currentElement.value, currentElement );
+			var currentApr = (_isEmpty( currentElement.value )) ? _replaceWithZero( currentElement ) : _checkAPRAmount( currentElement.value, currentElement );
 			initApr = (currentApr <= 1 || isNaN( currentApr )) ? 1 : currentApr;
 			currentLoanAmount = parseInt(calculatorElements.loanAmount.value.replace(/,/g, ''));
 
@@ -298,6 +301,17 @@ var MortgageCalculatorModule = (function () {
 		return 0;
 	}
 	/**
+	 * if value is 0, remove value and use placeholder
+	 * @param {HTMLElement} el - current element
+	 */
+	var _replaceWithZero = function (el) {
+		// if current value is less than 0 replace it with 0 placeholder and set currentAmount to 0
+		if ( el.value < 0 || !el.value || el.value === '0' ) {
+			el.value = '';
+			el.setAttribute( 'placeholder', 0 );
+		}
+	}
+	/**
 	 * check for downpayment errors
 	 * @param {Number} downpayment - current downpayment
 	 * @param {Number} homevalue - current homevalue
@@ -372,6 +386,7 @@ var MortgageCalculatorModule = (function () {
 		}
 	}
 
+	// accessors
 	return {
 		initCalculator: initCalculator,
 		updateValues: updateValues,

@@ -73,15 +73,7 @@ if ( formSection ) {
 		}
 	}
 	
-	/**
-	 * Initialize Results
-	 */
-	MortgageCalculatorModule.initCalculator(
-		calculatorElements.getLoanDownPaymentResult(), 
-		calculatorElements.getAprValue(), 
-		calculatorElements.getTermInYearsValue(),
-		calculatorElements.resultDiv
-	);
+	
 	
 	/**
 	 * Purposes of this Demo
@@ -89,8 +81,18 @@ if ( formSection ) {
 	 */
 	document.onreadystatechange = function () {
 		if ( document.readyState === 'interactive' ) {
-		    // var $homeValueInput = document.querySelector('#home-value');
-		    // $homeValueInput.value = $('.calcInfo').attr('data-homeprice');
+		    // var $homeValueInput = document.getElementById( 'home-value' );
+			// $homeValueInput.value = document.querySelector( '.calcInfo' ).dataset.homeprice;
+			
+			/**
+			 * Initialize Results
+			 */
+			MortgageCalculatorModule.initCalculator(
+				calculatorElements.getLoanDownPaymentResult(), 
+				calculatorElements.getAprValue(), 
+				calculatorElements.getTermInYearsValue(),
+				calculatorElements.resultDiv
+			);
 			
 			// initial values
 			var initialHV = calculatorElements.homeValue,
