@@ -1,3 +1,11 @@
+// var $calculatorSection = $( '.mortgage-calculator-section-container' );
+// $calculatorSection.click(function (evt) {
+// 	var $this = $( this );
+// 	evt.preventDefault();
+// 	$( 'html, body' ).animate({
+// 		scrollTop: $($this.attr( 'href' )).offset().top
+// 	}, 500);
+// });
 /**
  * elements and values
  */
@@ -57,9 +65,7 @@ if ( formSection ) {
 			downPaymentErrors: {
 				greaterThanHomeValueMsg: 'Downpayment is bigger than Homevalue'
 			},
-			percentErrors: {
-				greaterThanOneHundred: 'Value should not exceed 100%'
-			},
+			
 			aprErrors: {
 				greaterThanFifty: 'Value should\'nt exceed 50% of APR'
 			},
@@ -106,5 +112,5 @@ if ( formSection ) {
 	calculatorElements.percentage.addEventListener('keyup', MortgageCalculatorModule.updateValues, false);
 	calculatorElements.apr.addEventListener('keyup', MortgageCalculatorModule.updateValues, false);
 	calculatorElements.downPayment.addEventListener('keyup', MortgageCalculatorModule.updateValues, false);
-	calculatorElements.termInYears.addEventListener('change', MortgageCalculatorModule.updateValues, false);	
+	calculatorElements.termInYears.addEventListener('change', MortgageCalculatorModule.updateValues, false);
 }

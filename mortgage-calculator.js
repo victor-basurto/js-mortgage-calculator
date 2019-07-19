@@ -188,11 +188,21 @@ var MortgageCalculatorModule = (function () {
 					break;
 				case 'percent':
 					var percentToDp, currentAmmount;
+					// if current value is greater than 100 replace it with 100
+					if ( currentElement.value.replace(/,/g, '') > 100 ) {
+						currentElement.value = 100;
+					}
+					// if current value is less than 0 replace it with 0 placeholder and set currentAmount to 0
+					if ( currentElement.value < 0 || !currentElement.value || currentElement.value === '0' ) {
+						currentElement.value = '';
+						currentElement.setAttribute( 'placeholder', 0 );
+						currentAmmount = 0;
+					}
 					currentAmmount = (_isEmpty(currentElement.value)) ? _emptyFieldMsg(currentElement) : _checkPercentageAmount(currentElement.value, currentElement);
 					currentAmmount = (isNaN(currentAmmount)) ? 0 : currentAmmount;
 					currentHomeValue = calculatorElements.getHomeValue();
 					percentToDp = _percentToAmount(currentHomeValue, currentAmmount);
-					amounts.newAmount = (!percentToDp || percentToDp === 'undefined') ? initDownPay : percentToDp;
+					amounts.newAmount = ( percentToDp === 'undefined') ? initDownPay : percentToDp;
 					amounts.newAmountElement = calculatorElements.downPayment;
 
 					amounts.newLoan = currentHomeValue - percentToDp;
@@ -265,22 +275,33 @@ var MortgageCalculatorModule = (function () {
 	/*----------------------------------------
 		Errors Checker
 	 ------------------------------------------*/
+	 /**
+	  * check if current element value is empty
+	  * @param {HTMLElement} elVal - current element value
+	  * @return {Boolean} true/false
+	  */
 	var _isEmpty = function (elVal) {
 		var isEmpty = (!elVal || elVal.length < 1) ? true : false;
 		return isEmpty;
 	}
+	/**
+	 * apply errors if value is wrong format/empty etc.
+	 * @param {HTMLElement} el - current element
+	 * @return {Number} 0 - to keep flow
+	 */
 	var _emptyFieldMsg = function (el) {
 		var errorEl = getNextSibling( el, '.mortgage-inputs--error' );
 		var errorGroup = el.parentNode;
 		errorEl.style.display = 'block';
 		errorEl.innerHTML = calculatorElements.errors.emptyField;
 		errorGroup.classList.add( 'has-error' );
+		return 0;
 	}
 	/**
-	 * 
-	 * @param {*} downpayment 
-	 * @param {*} homevalue 
-	 * @param {*} el 
+	 * check for downpayment errors
+	 * @param {Number} downpayment - current downpayment
+	 * @param {Number} homevalue - current homevalue
+	 * @param {HTMLElement} el - current element
 	 */
 	var _checkDownPaymentAmount = function (downpayment, homevalue, el) {
 		var errorEl = getNextSibling( el, '.mortgage-inputs--error' );
@@ -297,7 +318,11 @@ var MortgageCalculatorModule = (function () {
 			return currentValue;
 		}
 	}
-
+	/**
+	 * check for percentage errors
+	 * @param {Number} percentage - current percentage
+	 * @param {HTMLElement} el - current element
+	 */
 	var _checkPercentageAmount = function (percentage, el) {
 		var errorEl = getNextSibling( el, '.mortgage-inputs--error' );
 		var currentValue = parseFloat( percentage ).toFixed( 2 );
@@ -313,7 +338,11 @@ var MortgageCalculatorModule = (function () {
 			return currentValue;
 		}
 	}
-
+	/**
+	 * check for APR Errors
+	 * @param {Number} apr - current apr
+	 * @param {HTMLElement} el - current element
+	 */
 	var _checkAPRAmount = function (apr, el) {
 		var errorEl = getNextSibling( el, '.mortgage-inputs--error' );
 		var currentValue = parseFloat( apr ).toFixed( 2 );
@@ -329,14 +358,16 @@ var MortgageCalculatorModule = (function () {
 			return currentValue;
 		}
 	}
-
+	/**
+	 * check if element matches digits only
+	 * @param {String} str - input string number
+	 */
 	var _itMatches = function (str) {
 		var regex = /^\d+$/g;
 		var result = regex.test( str );
 		if ( result ) {
 			return result;
 		} else {
-
 			return;
 		}
 	}

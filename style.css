@@ -4,16 +4,19 @@ html, body {
 	box-sizing: border-box;
 }
 body { font-size: 16px; }
+.calculator-container { margin:  45px auto; }
 .calculator-container h2 { text-align: center; }
 .mortgage-calculator-section {
-	height: 70vh;
-	width: 50%;
+	width: 60%;
 	margin: auto;
-	padding: 2rem;
+	padding: 2rem 4rem;
 	border: 2px solid #eeeeee;
 	border-radius: 5px;
+	box-shadow: 0.999px 0.052px 13px 0px rgba(0, 0, 0, 0.15);
 }
 .mortgage-calculator-section .mortgage-inputs {
+	margin-top: 25px;
+    margin-bottom: 25px;
 	display: grid;
     grid-template-columns: repeat(10, 1fr);
 	grid-template-rows: repeat(2, 60px);
@@ -57,15 +60,18 @@ body { font-size: 16px; }
 	flex-direction: column;
 }
 .mortgage-calculator-section #results {
-	color: red;
+	color: #5f4f4f;
 	font-weight: 800;
 	margin: 0;
-	padding-left: 10px;
-	font-size: 1.2rem;
+	font-size: 1.5rem;
+	background: transparent;
+	padding: 0 0 0 10px;
+	letter-spacing: 0.2rem;
 }
 .mortgage-calculator-section #amount {
 	background: #e5e5e5;
-	color: red;
+	color: #383531;
+	font-weight: 800;
 }
 
 .mortgage-calculator-section .has-error input,
@@ -86,18 +92,30 @@ body { font-size: 16px; }
 	text-align: center;
 	font-style: unset;
 }
-.mortgage-calculator-section input { border: 1px solid #ccc; }
+.mortgage-calculator-section input {
+	border: 1px solid #ccc;
+	border-radius: 0;
+}
 .mortgage-calculator-section .percent-group > i,
 .mortgage-calculator-section .interest-group > i { right: 0; }
 .mortgage-calculator-section .dollar-group input { padding-left: 25px; }
-.mortgage-calculator-section .mortgage-inputs label { display: block; }
+.mortgage-calculator-section .mortgage-inputs label { display: block; margin: 0; }
 .mortgage-calculator-section .mortgage-inputs input { min-height: 35px; }
-.mortgage-calculator-section .mortgage-inputs select { min-height: 39px; height: 39px; }
+.mortgage-calculator-section .mortgage-inputs select {
+	min-height: 41px;
+	height: 41px;
+	border: 1px solid #ccc;
+    border-radius: 0;
+}
 
 /*-----------------------------------------------------------
 	Media Queries - Responsive
 -------------------------------------------------------------*/
+@media (max-width: 1450px) {
+	.mortgage-calculator-section { width: 70%; }
+}
 @media (max-width: 1023px) and (min-width: 768px) {
+	.mortgage-calculator-section { width: 90%; }
 	.mortgage-calculator-section .mortgage-inputs {
 		grid-template-columns: repeat(8, 1fr);
 		grid-template-rows: repeat(3, 60px);
@@ -108,6 +126,10 @@ body { font-size: 16px; }
 	}
 }
 @media (max-width: 767px) {
+	.mortgage-calculator-section {
+		width: 95%;
+		padding: 1rem 1.5rem;
+	}
 	.mortgage-calculator-section .mortgage-inputs {
 		grid-template-columns: repeat(4, 1fr);
 		grid-template-rows: repeat(6, 60px);
