@@ -128,15 +128,9 @@ var MortgageCalculatorModule = (function () {
 	 * @param {HTMLElement} e - Current Element 
 	 */
 	var updateValues = function (e) {
-
 		if ( e.which >= 37 && e.which <= 40 ) return;
-		
-		this.value = this.value.replace(/\D/g, '')
-			.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		this.value = (e.target.name !== 'apr') ? this.value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',') : this.value;
 
-		/**
-		 * TODO: Remove alerts and set errors
-		 */
 		// temporary var
 		var currentElement = e.currentTarget,
 			elementName = currentElement.getAttribute('name'),
@@ -294,8 +288,8 @@ var MortgageCalculatorModule = (function () {
 	 * @return {Number} 0 - to keep flow
 	 */
 	var _emptyFieldMsg = function (el) {
-		var errorEl = getNextSibling( el, '.mortgage-inputs--error' );
-		var errorGroup = el.parentNode;
+		var errorEl = getNextSibling( el, '.mortgage-inputs--error' ),
+			errorGroup = el.parentNode;
 		errorEl.style.display = 'block';
 		errorEl.innerHTML = calculatorElements.errors.emptyField;
 		errorGroup.classList.add( 'has-error' );
@@ -319,9 +313,9 @@ var MortgageCalculatorModule = (function () {
 	 * @param {HTMLElement} el - current element
 	 */
 	var _checkDownPaymentAmount = function (downpayment, homevalue, el) {
-		var errorEl = getNextSibling( el, '.mortgage-inputs--error' );
-		var currentValue = parseInt( downpayment.replace(/,/g, '') );
-		var errorGroup = el.parentNode;
+		var errorEl = getNextSibling( el, '.mortgage-inputs--error' ),
+			currentValue = parseInt( downpayment.replace(/,/g, '') ),
+			errorGroup = el.parentNode;
 
 		if ( currentValue > homevalue ) {
 			errorGroup.classList.add( 'has-error' );
@@ -339,9 +333,9 @@ var MortgageCalculatorModule = (function () {
 	 * @param {HTMLElement} el - current element
 	 */
 	var _checkPercentageAmount = function (percentage, el) {
-		var errorEl = getNextSibling( el, '.mortgage-inputs--error' );
-		var currentValue = parseFloat( percentage ).toFixed( 2 );
-		var errorGroup = el.parentNode;
+		var errorEl = getNextSibling( el, '.mortgage-inputs--error' ),
+			currentValue = parseFloat( percentage ).toFixed( 2 ),
+			errorGroup = el.parentNode;
 
 		if ( percentage > 100 ) {
 			errorGroup.classList.add( 'has-error' );
@@ -359,9 +353,9 @@ var MortgageCalculatorModule = (function () {
 	 * @param {HTMLElement} el - current element
 	 */
 	var _checkAPRAmount = function (apr, el) {
-		var errorEl = getNextSibling( el, '.mortgage-inputs--error' );
-		var currentValue = parseFloat( apr ).toFixed( 2 );
-		var errorGroup = el.parentNode;
+		var errorEl = getNextSibling( el, '.mortgage-inputs--error' ),
+			currentValue = parseFloat( apr ).toFixed( 2 ),
+			errorGroup = el.parentNode;
 
 		if ( apr > 50 ) {
 			errorGroup.classList.add( 'has-error' );
@@ -378,8 +372,8 @@ var MortgageCalculatorModule = (function () {
 	 * @param {String} str - input string number
 	 */
 	var _itMatches = function (str) {
-		var regex = /^\d+$/g;
-		var result = regex.test( str );
+		var regex = /^\d+$/g,
+			result = regex.test( str );
 		if ( result ) {
 			return result;
 		} else {

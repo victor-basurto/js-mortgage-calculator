@@ -1,11 +1,3 @@
-// var $calculatorSection = $( '.mortgage-calculator-section-container' );
-// $calculatorSection.click(function (evt) {
-// 	var $this = $( this );
-// 	evt.preventDefault();
-// 	$( 'html, body' ).animate({
-// 		scrollTop: $($this.attr( 'href' )).offset().top
-// 	}, 500);
-// });
 /**
  * elements and values
  */
