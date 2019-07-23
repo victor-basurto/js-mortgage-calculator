@@ -20,7 +20,8 @@
 					<i>$</i>
 					<div class="mortgage-inputs--error">value should not be empty</div>
 				</div>
-				<div class="mortgage-inputs__group dollar-group loan-value-input">
+				<!-- no longer need it, but required for internal use -->
+				<div class="mortgage-inputs__group dollar-group loan-value-input" style="display: none">
 					<label>Loan Amount:</label>
 					<input disabled type="text" id="amount" name="loan" value="0">
 					<i>$</i>
@@ -54,8 +55,8 @@
 					</select>
 				</div>
 				<div class="mortgage-inputs__results">
-					<label>Your Payment:</label>
-					<input id="results" type="text" name="results" disabled>
+					<p>Your Payment:</p>
+					<p id="results" name="results"></p>
 				</div>
 			</div>
 		</div>

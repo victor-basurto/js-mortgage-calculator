@@ -240,6 +240,7 @@ var MortgageCalculatorModule = (function () {
 	 * @param {HTMLElement} resultEl - element to be modified
 	 */
 	var initCalculator = function (p, r, n, resultEl) {
+		
 		var result, formatter;
 		// format to US-Currency
 		formatter = new Intl.NumberFormat('en-US', {
@@ -251,7 +252,7 @@ var MortgageCalculatorModule = (function () {
 		result = _calculateMortgage(p, r, n);
 
 		// display results
-		resultEl.value = formatter.format(result);
+		resultEl.innerText = formatter.format( result );
 	};
 
 	/**
