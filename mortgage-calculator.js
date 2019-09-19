@@ -1,3 +1,4 @@
+
 var MortgageCalculatorModule = (function () {
 	/*----------------------------------------
 		Private Methods
@@ -113,7 +114,7 @@ var MortgageCalculatorModule = (function () {
 	var _checkHomeValue = function (currentEl) {
 		if ( _isEmpty(currentEl.value) && !_itMatches(currentEl.value) ) {
 			_emptyFieldMsg(currentEl);
-			return currentEl.value = 0;
+			return currentEl.setAttribute( 'placeholder', 0 );
 		} else {
 			getNextSibling(currentEl, '.mortgage-inputs--error').style.display = 'none';
 			currentEl.parentNode.classList.remove( 'has-error' );
@@ -131,19 +132,15 @@ var MortgageCalculatorModule = (function () {
 
 		if ( e.which >= 37 && e.which <= 40 ) return;
 		
-		this.value = this.value.replace(/\D/g, '')
-			.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		this.value = (e.target.name !== 'apr') ? this.value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',') : this.value;
 
-		/**
-		 * TODO: Remove alerts and set errors
-		 */
 		// temporary var
 		var currentElement = e.currentTarget,
 			elementName = currentElement.getAttribute('name'),
 			amounts = {};
 
 		// initial values
-		var initHomeValue = calculatorElements.getHomeValue(),
+		var initHomeValue = calculatorElements.getHomeValue() === 'Nan' ? 0 : calculatorElements.getHomeValue(),
 			initLoan = calculatorElements.getLoanAmountValue(),
 			initDownPay = calculatorElements.getLoanAmountValue(),
 			initPercent = calculatorElements.getPercentValue(),
@@ -156,9 +153,9 @@ var MortgageCalculatorModule = (function () {
 			var  percentageValue;
 			currentHomeValue = _checkHomeValue( currentElement );
 			percentageValue = parseFloat( calculatorElements.getPercentValue() ).toFixed(2);
-			amounts.newLoan = currentHomeValue - ((currentHomeValue * percentageValue) / 100);
+			amounts.newLoan = currentHomeValue - ((currentHomeValue * percentageValue) / 100) || 0;
 			amounts.loanamountElement = calculatorElements.loanAmount;
-			amounts.newAmount = (currentHomeValue * percentageValue) / 100;
+			amounts.newAmount = (currentHomeValue * percentageValue) / 100 || 0;
 			amounts.newAmountElement = calculatorElements.downPayment;
 
 			_setNewValue( amounts );
@@ -251,7 +248,7 @@ var MortgageCalculatorModule = (function () {
 		result = _calculateMortgage(p, r, n);
 
 		// display results
-		resultEl.value = formatter.format(result);
+		resultEl.innerText = formatter.format( result );
 	};
 
 	/**
